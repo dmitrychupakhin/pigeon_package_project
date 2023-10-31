@@ -2,9 +2,27 @@
 {% load static %}
 
 {% block headblock %}
-<link type="text/css" href="{% static 'pigeon_package_main_app/css/registration.css' %}" rel="stylesheet">
+<link type="text/css" href="{% static 'pigeon_package_account_app/css/registration.css' %}" rel="stylesheet">
 {% endblock headblock %}
 
 {% block content %}
-<div class="text">Регистрация</div>
+<div class="registration-panel">
+    <div class="registration-panel__logo">New <span class="pigeon">Pigeon</span></div>
+    <form class="registration-panel-form" action="post">
+        <div class="registration-panel-form__text">Name</div>
+        <input class="registration-panel-form__text-input" type="text">
+        <div class="registration-panel-form__text">Password</div>
+        <input class="registration-panel-form__text-input" type="text">
+        <div class="registration-panel-form__text">E-mail</div>
+        <input class="registration-panel-form__text-input" type="text">
+        <div class="registration-panel-form-radio">
+            <label class="registration-panel-form-radio-label" for="option1">Public</label>
+            <input type="radio" id="option1" name="question" value="option1">
+            <label class="registration-panel-form-radio-label" for="option2">Private</label>
+            <input type="radio" id="option2" name="question" value="option2">
+        </div>
+        <button class="registration-panel-form__button" type="button" onclick="submitForm()">Create <span
+                class="pigeon">Pigeon</span></button>
+    </form>
+</div>
 {% endblock content %}

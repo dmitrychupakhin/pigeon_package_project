@@ -1,0 +1,70 @@
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.registration-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #dedede;
+    border-radius: 6px;
+    width: 50%;
+}
+
+.registration-panel__logo {
+    font-size: 30px;
+    margin: 10px;
+}
+
+.registration-panel-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.registration-panel-form__text {
+    align-self: start;
+    font-size: 25px;
+    margin-top: 7px;
+    margin-left: 5%;
+}
+
+.registration-panel-form__text-input {
+    font-size: 25px;
+    border: 1px solid #dedede;
+    border-radius: 6px;
+    margin-top: 7px;
+    width: 90%;
+    padding: 5px;
+}
+
+.registration-panel-form__text-input-big {
+    font-size: 25px;
+    border: 1px solid #dedede;
+    border-radius: 6px;
+    height: 200px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    resize: none;
+
+}
+
+.registration-panel-form__radio {
+    align-self: start;
+    font-size: 25px;
+}
+
+.registration-panel-form-radio-label {
+    font-size: 25px;
+}
+
+.registration-panel-form__button {
+    font-size: 25px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    border: 1px solid #dedede;
+    border-radius: 6px;
+    padding: 5px;
+}

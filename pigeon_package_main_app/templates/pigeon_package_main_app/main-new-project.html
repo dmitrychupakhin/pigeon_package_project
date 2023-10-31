@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block headblock %}
+<link type="text/css" href="{% static 'pigeon_package_main_app/css/main-new-project.css' %}" rel="stylesheet">
+{% endblock headblock %}
+
+{% block content %}
+<div class="new-project-panel">
+    <div class="new-project-panel__logo">New <span class="package">Package</span></div>
+    <form class="new-project-panel-form" action="post">
+        <div class="new-project-panel-form__text">Name</div>
+        <input class="new-project-panel-form__text-input" type="text">
+        <div class="new-project-panel-form__text">Description</div>
+        <textarea rows="5" cols="50"
+            class="new-project-panel-form__text-input new-project-panel-form__text-input-big"></textarea>
+        <div class="new-project-panel-form-radio">
+            <label class="new-project-panel-form-radio-label" for="option1">Public</label>
+            <input type="radio" id="option1" name="question" value="option1">
+            <label class="new-project-panel-form-radio-label" for="option2">Private</label>
+            <input type="radio" id="option2" name="question" value="option2">
+        </div>
+        <button class="new-project-panel-form__button" type="button" onclick="submitForm()">Create <span
+                class="package">Package</span></button>
+    </form>
+</div>
+{% endblock content %}
