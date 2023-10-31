@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="{% static 'css/null.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'css/base.css' %}" rel="stylesheet">
+    {% block headblock %}
+    {% endblock headblock %}
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <div class="logo">
+                <div class="logo__text"><a href="{% url 'main' %}" class="pigeon">Pigeon</a><a href="{% url 'main' %}"
+                        class="package">Package</a></div>
+            </div>
+            <div class="user-auth-profile">
+                <a href="{% url 'registration' %}" class="user-registration user-auth-profile__button">
+                    Регистрация
+                </a>
+                <a href="{% url 'authentication' %}" class="user-authentication user-auth-profile__button">
+                    Авторизация
+                </a>
+            </div>
+        </div>
+        <div class="content">
+            {% block content %}
+            {% endblock content %}
+        </div>
+        <div class="footer">
+
+        </div>
+    </div>
+</body>
+
+</html>

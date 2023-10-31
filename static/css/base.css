@@ -1,0 +1,58 @@
+.wrapper{
+    background-color: rgb(255, 255, 255);
+    font-family: 'Cascadia Code', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.content{
+    flex: 1;
+    padding: 30px 30px;
+}
+
+.header{
+    flex-shrink: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: rgb(246, 248, 250);
+    padding: 30px;
+    border-bottom: 1px solid #dedede;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footer {
+    flex-shrink: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: rgb(246, 248, 250);
+    padding: 30px;
+    margin-top: auto;
+    border-top: 1px solid #dedede;
+}
+
+.logo__text{
+    font-size: 25px;
+}
+
+.pigeon{
+    color: rgb(89, 130, 184);
+}
+
+.package{
+    color: rgb(151, 202, 0);
+}
+
+.user-auth-profile{
+    display: flex;
+}
+
+.user-auth-profile__button{
+    font-size: 15px;
+    margin-left: 20px;
+    color: black;
+}
