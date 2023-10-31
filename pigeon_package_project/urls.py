@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('', include('pigeon_package_main_app')),
-    path('account/', include('pigeon_package_account_app')),
-    path('admin/', admin.site.urls),
+    path('', include('pigeon_package_main_app.urls')),
+    #path('account/', include('pigeon_package_account_app')),
+    #path('admin/', admin.site.urls),
 ]

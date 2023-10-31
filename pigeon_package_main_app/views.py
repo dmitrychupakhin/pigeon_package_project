@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def main(request):
+    return render(request=request, template_name='pigeon_package_main_app/main.html')
