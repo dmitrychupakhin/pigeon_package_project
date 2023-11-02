@@ -1,5 +1,6 @@
 .wrapper{
     background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     font-family: 'Cascadia Code', sans-serif;
     display: flex;
     flex-direction: column;
@@ -10,6 +11,7 @@
 .content{
     flex: 1;
     padding: 30px 30px;
+    font-size: 20px;
 }
 
 .header{
@@ -37,6 +39,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
 }
 
 .logo__text{
@@ -58,7 +61,7 @@
 .user-auth-profile__button{
     font-size: 15px;
     margin-left: 20px;
-    color: black;
+    color: rgb(0, 0, 0);
 }
 
 .footer__text{

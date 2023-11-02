@@ -1,0 +1,13 @@
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.authentication-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #dedede;
+    border-radius: 6px;
+}

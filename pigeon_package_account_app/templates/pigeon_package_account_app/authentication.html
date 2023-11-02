@@ -2,9 +2,15 @@
 {% load static %}
 
 {% block headblock %}
-<link type="text/css" href="{% static 'pigeon_package_main_app/css/authentication.css' %}" rel="stylesheet">
+<link type="text/css" href="{% static 'pigeon_package_account_app/css/authentication.css' %}" rel="stylesheet">
 {% endblock headblock %}
 
 {% block content %}
-<div class="text">Авторизация</div>
+<div class="authentication-panel">
+    <form method="post" class="my-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+</div>
 {% endblock content %}

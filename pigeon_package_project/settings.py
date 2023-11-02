@@ -133,3 +133,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'account/login/'
+
+AUTH_USER_MODEL = 'pigeon_package_account_app.PigeonPackageUser'

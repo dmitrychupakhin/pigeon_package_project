@@ -20,5 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('', include('pigeon_package_main_app.urls')),
     path('account/', include('pigeon_package_account_app.urls')),
-    #path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
 ]
