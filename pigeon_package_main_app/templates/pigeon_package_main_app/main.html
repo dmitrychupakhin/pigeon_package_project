@@ -2,11 +2,40 @@
 {% load static %}
 
 {% block headblock %}
-<link type="text/css" href="{% static 'pigeon_package_main_app/css/main-new-project.css' %}" rel="stylesheet">
+<link type="text/css" href="{% static 'pigeon_package_main_app/css/main.css' %}" rel="stylesheet">
 {% endblock headblock %}
 
 {% block content %}
-<div class="new-project-panel">
-    Страница нового проекта
+<div class="packages-list">
+    <div class="packages-list__title">
+        Packages
+    </div>
+    {% if packages %}
+    {% for package in packages %}
+    <a href="{% url 'package-editor-page' id=package.id %}" class="packages-list__package">
+        <div class="packages-list__package-name">
+            {{ package.name }}
+        </div>
+    </a>
+    {% endfor %}
+    {% else %}
+    <div class="packages-list__message-error">На данный момент у вас нет Packages )=</div>
+    {% endif %}
+</div>
+<div class="new-package-panel">
+    <div class="new-package-panel__title">
+        New Package
+    </div>
+    <div class="new-package-panel__content">
+        <form method="post" class="new-package-panel__form">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="new-package-panel__form-item">
+                {{ field.label_tag }} {{ field }}
+            </div>
+            {% endfor %}
+            <button type="submit">Новый Package</button>
+        </form>
+    </div>
 </div>
 {% endblock content %}

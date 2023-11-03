@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block headblock %}
+<link type="text/css" href="{% static 'pigeon_package_main_app/css/package-editor.css' %}" rel="stylesheet">
+{% endblock headblock %}
+
+{% block content %}
+<div class="files-list">
+    <div class="files-list__title">
+        Files
+    </div>
+    {% if files %}
+    {% for file in files %}
+    <a href="{% url 'file-editor-page' id=package.id %}" class="files-list__file">
+        <div class="files-list__file-name">
+            {{ package.name }}
+        </div>
+    </a>
+    {% endfor %}
+    {% else %}
+    <div class="files-list__message-error">На данный момент у вас нет файлов )=</div>
+    {% endif %}
+</div>
+<div class="new-package-panel">
+
+</div>
+<div class="chat">
+
+</div>
+{% endblock content %}
