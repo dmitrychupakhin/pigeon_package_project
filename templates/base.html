@@ -20,6 +20,17 @@
                 <div class="logo__text"><a href="{% url 'main' %}" class="pigeon">Pigeon</a><a href="{% url 'main' %}"
                         class="package">Package</a></div>
             </div>
+            {% if user.is_authenticated %}
+            <div class="user-auth-profile">
+                <a href="#" class="user-username user-auth-profile__button">
+                    {{ user.username }}
+                </a>
+                <img class="user-registration user-auth-profile__img" src="{{ MEDIA_URL }}{{user.profile_picture }}"
+                    alt="User Photo">
+                <a href="{% url 'deauthentication' %}" class="user-registration user-auth-profile__button">Выйти</a>
+
+            </div>
+            {% else %}
             <div class="user-auth-profile">
                 <a href="{% url 'registration' %}" class="user-registration user-auth-profile__button">
                     Регистрация
@@ -28,6 +39,7 @@
                     Авторизация
                 </a>
             </div>
+            {% endif %}
         </div>
         <div class="content">
             {% block content %}

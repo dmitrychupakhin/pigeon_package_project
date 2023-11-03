@@ -17,9 +17,10 @@
 .header{
     flex-shrink: 0;
     width: 100%;
+    height: 70px;
     padding: 20px;
     background-color: rgb(246, 248, 250);
-    padding: 30px;
+    padding: 5px 30px;
     border-bottom: 1px solid #dedede;
 
     display: flex;
@@ -30,6 +31,7 @@
 .footer {
     flex-shrink: 0;
     width: 100%;
+    height: 70px;
     padding: 20px;
     background-color: rgb(246, 248, 250);
     padding: 30px;
@@ -56,6 +58,7 @@
 
 .user-auth-profile{
     display: flex;
+    align-items: center;
 }
 
 .user-auth-profile__button{
@@ -67,4 +70,12 @@
 .footer__text{
     color: rgb(132, 132, 132);
     margin-top: 2px;
+}
+
+.user-auth-profile__img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 20px;
 }

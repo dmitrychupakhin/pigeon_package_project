@@ -22,11 +22,17 @@ class PigeonPackageUserManager(BaseUserManager):
 
         return self.create_user(email, username, password, **extra_fields)
 
+def get_profile_image_filepath(self, filename):
+	return 'profile_picture/' + str(self.pk) + '/profile_picture.png'
+
+def get_default_profile_image():
+	return "default/default_profile_picture.png"
+
 class PigeonPackageUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=True)
     personal_info = models.TextField(blank=True)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True, default='/img/default_profile_pic.jpg')
+    profile_picture = models.ImageField(upload_to=get_profile_image_filepath, blank=True, null=True, default=get_default_profile_image)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -34,7 +40,7 @@ class PigeonPackageUser(AbstractBaseUser, PermissionsMixin):
     objects = PigeonPackageUserManager()
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['']
+    REQUIRED_FIELDS = ['email']
 
     def __str__(self):
         return self.email
