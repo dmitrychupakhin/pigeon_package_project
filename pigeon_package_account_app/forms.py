@@ -16,3 +16,8 @@ class RegistrationUserForm(UserCreationForm):
 class AuthenticationUserForm(AuthenticationForm):
     username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = PigeonPackageUser
+        fields = ['profile_picture', 'username', 'email', 'password']

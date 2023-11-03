@@ -1,0 +1,11 @@
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.user-info__profile-img {
+    width: 300px;
+    height: 300px;
+}

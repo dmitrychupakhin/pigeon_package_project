@@ -22,7 +22,7 @@
             </div>
             {% if user.is_authenticated %}
             <div class="user-auth-profile">
-                <a href="#" class="user-username user-auth-profile__button">
+                <a href="{% url 'profile' %}" class="user-username user-auth-profile__button">
                     {{ user.username }}
                 </a>
                 <img class="user-registration user-auth-profile__img" src="{{ MEDIA_URL }}{{user.profile_picture }}"
