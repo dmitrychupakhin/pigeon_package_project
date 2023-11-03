@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_cleanup',
     'pigeon_package_account_app',
     'pigeon_package_main_app',
     'django.contrib.admin',

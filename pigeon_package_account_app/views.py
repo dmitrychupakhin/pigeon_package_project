@@ -10,7 +10,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 import os
-from .models import *
 
 from pigeon_package_account_app.models import PigeonPackageUser
 
@@ -18,34 +17,6 @@ class RegistrationUser(CreateView):
     form_class = RegistrationUserForm
     template_name = 'pigeon_package_account_app/registration.html'
     success_url = reverse_lazy('main')
-
-    def form_valid(self, form):
-        user = form.save(commit=False)
-        
-        user.save()
-        
-        if 'profile_picture' in self.request.FILES:
-            uploaded_file = self.request.FILES['profile_picture']
-        
-            # Путь к папке для сохранения изображений пользователя
-            user_image_path = os.path.join(settings.MEDIA_ROOT, 'user_picture', str(user.id))
-            
-            # Создание папки для изображений пользователя, если её нет
-            os.makedirs(user_image_path, exist_ok=True)
-
-            # Путь к файлу изображения пользователя
-            user_image_file_path = os.path.join(user_image_path, 'profile.jpg')  # или другое расширение файла
-
-            # Сохранение изображения по указанному пути
-            with open(user_image_file_path, 'wb+') as destination:
-                for chunk in uploaded_file.chunks():
-                    destination.write(chunk)
-
-            # Сохранение пути к изображению в поле профиля пользователя
-            user.profile_picture = os.path.join('user_picture', str(user.id), 'profile.jpg')
-            user.save()
-
-        return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

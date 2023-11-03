@@ -25,17 +25,17 @@ class PigeonPackageUserManager(BaseUserManager):
         return self.create_user(email, username, password, **extra_fields)
 
 
-def get_profile_image_filepath(self, filename):
+def get_profile_picture_filepath(self, filename):
 	return 'profile_picture/' + str(self.pk) + '/profile_picture.png'
 
-def get_default_profile_image():
+def get_default_profile_picture():
 	return "default/default_profile_picture.png"
 
 class PigeonPackageUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=True)
     personal_info = models.TextField(blank=True)
-    profile_picture = models.ImageField(upload_to=get_profile_image_filepath, blank=True, null=True, default=get_default_profile_image)
+    profile_picture = models.ImageField(upload_to=get_profile_picture_filepath, blank=True, null=True, default=get_default_profile_picture)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -46,11 +46,11 @@ class PigeonPackageUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['email']
 
     def __str__(self):
-        return self.email
+        return self.username
     
     def save(self, *args, **kwargs):
         # Проверяем, есть ли у пользователя изображение профиля
         if not self.profile_picture:
-            self.profile_picture = get_default_profile_image()
+            self.profile_picture = get_default_profile_picture()
 
         super(PigeonPackageUser, self).save(*args, **kwargs)
