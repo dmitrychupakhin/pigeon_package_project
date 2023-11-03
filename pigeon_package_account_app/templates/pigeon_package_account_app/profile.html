@@ -11,9 +11,8 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            {% if form.instance.profile_picture %}
-            <img class="user-info__profile-img" src="{{ form.instance.profile_picture.url }}"
-                alt="Current Profile Picture">
+            {% if user.profile_picture %}
+            <img class="user-info__profile-img" src="{{ user.profile_picture.url }}" alt="Current Profile Picture">
             {% endif %}
             <button type="submit">Сохранить изменения</button>
         </form>

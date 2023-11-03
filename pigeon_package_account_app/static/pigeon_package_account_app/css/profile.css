@@ -4,6 +4,13 @@
     align-items: center;
 }
 
+.profile-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #dedede;
+    border-radius: 6px;
+}
 
 .user-info__profile-img {
     width: 300px;

@@ -1,3 +1,5 @@
+import os
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
@@ -22,6 +24,7 @@ class PigeonPackageUserManager(BaseUserManager):
 
         return self.create_user(email, username, password, **extra_fields)
 
+
 def get_profile_image_filepath(self, filename):
 	return 'profile_picture/' + str(self.pk) + '/profile_picture.png'
 
@@ -44,3 +47,10 @@ class PigeonPackageUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+    def save(self, *args, **kwargs):
+        # Проверяем, есть ли у пользователя изображение профиля
+        if not self.profile_picture:
+            self.profile_picture = get_default_profile_image()
+
+        super(PigeonPackageUser, self).save(*args, **kwargs)
