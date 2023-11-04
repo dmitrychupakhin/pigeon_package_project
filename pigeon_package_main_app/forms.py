@@ -2,7 +2,7 @@ from django import forms
 from .models import Package, TextFile
 
 class FileEditForm(forms.ModelForm):
-    content = forms.CharField(widget=forms.Textarea(attrs={'class': 'myTextarea editor__text-area', 'id': 'myTextarea'}), required=False)
+    content = forms.CharField(widget=forms.Textarea(attrs={'class': 'myTextarea editor__text-area', 'id': 'myTextarea'}), required=False, strip=False)
     class Meta:
         model = TextFile
         fields = ('content',)
