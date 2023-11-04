@@ -4,7 +4,8 @@
 {% block headblock %}
 <link type="text/css" href="{% static 'pigeon_package_main_app/css/file-editor.css' %}" rel="stylesheet">
 <link type="text/css" href="{% static '/css/base-main.css' %}" rel="stylesheet">
-
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 {% endblock headblock %}
 
 {% block additional_logo_text %}
@@ -30,18 +31,85 @@ Files
 
 {% endblock list__content %}
 
+{% block list__buttons %}
+<a href="{% url 'package-editor-page' package.id %}">
+    <span class="material-symbols-outlined arrow_back">
+        keyboard_return
+    </span>
+</a>
+<a href="#"><span class="material-symbols-outlined add">
+        add
+    </span></a>
+<a href="#">
+    <span class="material-symbols-outlined minimize">
+        remove
+    </span>
+</a>
+
+{% endblock list__buttons %}
+
 {% block editor__title %}
 {{file.name}}
 {% endblock editor__title %}
 
+{% block editor__buttons_left %}
+<button type="submit" href="#" onclick="submitForm()">
+    <span class=" material-symbols-outlined save">
+        save
+    </span>
+</button>
+<a href="#">
+    <span class="material-symbols-outlined zoom">
+        zoom_in
+    </span>
+</a>
+<a href="#">
+    <span class="material-symbols-outlined zoom">
+        zoom_out
+    </span>
+</a>
+<p>Количество символов: <span id="characterCount">0</span></p>
+{% endblock editor__buttons_left %}
+
+{% block editor__buttons_right %}
+
+<a href="#"><span class="material-symbols-outlined delete">
+        delete_forever
+    </span></a>
+{% endblock editor__buttons_right %}
+
 {% block editor__content %}
-<div class="editor__text">
-    <textarea class="editor__text-area" id="myTextarea" oninput="autoResize(event)"
-        placeholder="Начните писать здесь...">{{file.content}}</textarea>
-</div>
+
+<form id="myForm" class="editor__text" action="{% url 'file-editor-page' file.id %}" method="POST">
+    {% csrf_token %}
+    {{ form.content }}
+</form>
 
 <script>
-    var lastcount = 0;
+    function countCharacters() {
+        const textarea = document.getElementById("myTextarea");
+        const characterCount = document.getElementById("characterCount");
+        const count = textarea.value.length;
+        characterCount.textContent = count;
+    }
+
+    function submitForm() {
+        // Получаем форму по её id
+        var form = document.getElementById("myForm");
+
+        // Отправляем форму с помощью метода submit()
+        form.submit();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var textarea = document.getElementById('myTextarea');
+
+        textarea.addEventListener('input', function (event) {
+            countCharacters();
+            autoResize(event);
+        });
+    });
+
     function autoResize(event) {
 
         const textarea = event.target;
@@ -55,9 +123,25 @@ Files
         event.preventDefault();
     }
     window.onload = function () {
+        countCharacters();
         const textarea = document.getElementById('myTextarea');
         autoResize({ target: textarea });
     };
+
+    const textarea = document.getElementById('myTextarea');
+    textarea.addEventListener('keydown', function (e) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+
+            const value = this.value;
+            this.value = value.substring(0, start) + '\t' + value.substring(end);
+
+            this.selectionStart = this.selectionEnd = start + 1;
+        }
+    });
 </script>
 {% endblock editor__content %}
 
@@ -66,4 +150,5 @@ Files
 {% endblock additional-block__title %}
 
 {% block additional-block__content %}
+<div style="font-style: italic;" class="error-message">В разработке</div>
 {% endblock additional-block__content %}

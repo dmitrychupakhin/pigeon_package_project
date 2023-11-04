@@ -9,10 +9,8 @@
 }
 
 .editor__text-area{
-    
     resize: none;
     border-left: 1px dashed #dedede;
     border-right: 1px dashed #dedede;
     margin: 10px;
 }
-

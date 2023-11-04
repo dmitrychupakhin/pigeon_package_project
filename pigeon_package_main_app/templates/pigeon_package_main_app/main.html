@@ -21,9 +21,32 @@ Packages
 {% endfor %}
 {% endblock list__content %}
 
+{% block list__buttons %}
+
+<a href="#"><span class="material-symbols-outlined add">
+        add
+    </span></a>
+<a href="#">
+    <span class="material-symbols-outlined minimize">
+        remove
+    </span>
+</a>
+
+{% endblock list__buttons %}
+
 {% block editor__title %}
 PigeonPackage
 {% endblock editor__title %}
+
+
+
+{% block editor__buttons_left %}
+<a href="settings">
+    <span class="material-symbols-outlined zoom">
+        settings
+    </span>
+</a>
+{% endblock editor__buttons_left %}
 
 {% block editor__content %}
 {% endblock editor__content %}
@@ -33,4 +56,5 @@ PigeonPackage
 {% endblock additional-block__title %}
 
 {% block additional-block__content %}
+<div style="font-style: italic;" class="error-message">В разработке</div>
 {% endblock additional-block__content %}

@@ -8,12 +8,23 @@ def file_editor(request, id):
     files = TextFile.objects.all()
     file = files.get(id=id)
     package = file.package
+    form = FileEditForm(instance=file)
     context = {
+        'form': form,
         'package': package,
         'files': files,
         'file': file,
         'MEDIA_URL': settings.MEDIA_URL
-    } 
+    }   
+         
+    if request.method == 'POST':
+        form = FileEditForm(request.POST, instance=file)
+        if form.is_valid():
+            print(form)
+            form.save()
+            context['form'] = form
+        print(form.errors)
+    
     return render(request=request, template_name='pigeon_package_main_app/file-editor.html', context=context)
 
 @login_required

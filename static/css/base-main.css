@@ -20,9 +20,34 @@
 
 .block-title{
     border-bottom: 1px solid #dedede;
-    margin-bottom: 10px;
 }
 
 .list__content-item{
     color: black;
+}
+
+.block-buttons{
+    border-bottom: 1px solid #dedede;
+    margin-bottom: 10px;
+    margin-top: 4px;
+}
+
+.arrow_back, .add, .minimize, .zoom, .save{
+    color: #000000;
+}
+
+.editor__buttons{
+    display: flex;
+    justify-content: space-between;
+}
+
+.save{
+    background-color: white;
+}
+
+.delete{
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    color:rgb(179, 29, 29)
 }
