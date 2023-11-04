@@ -1,0 +1,28 @@
+.content {
+    display: grid;
+    grid-template-columns: 2fr 8fr 2fr;
+    grid-template-rows: 1fr;
+    padding: 30px 30px;
+    gap: 10px;
+}
+
+.list,
+.editor,
+.additional-block {
+    padding: 10px;
+    border: 1px solid #dedede;
+    border-radius: 6px;
+}
+
+.logo-path {
+    color: rgb(176, 176, 176);
+}
+
+.block-title{
+    border-bottom: 1px solid #dedede;
+    margin-bottom: 10px;
+}
+
+.list__content-item{
+    color: black;
+}

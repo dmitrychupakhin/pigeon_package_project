@@ -1,9 +1,16 @@
 {% extends "base-main.html" %}
 {% load static %}
 
+{% block headblock %}
+<link type="text/css" href="{% static 'pigeon_package_main_app/css/file-editor.css' %}" rel="stylesheet">
+<link type="text/css" href="{% static '/css/base-main.css' %}" rel="stylesheet">
+{% endblock headblock %}
+
 {% block additional_logo_text %}
 <div class="logo-path">
-    /<a class="logo-path" href="{% url 'package-editor-page' package.id %}">{{package.name}}</a>
+    /<a class="logo-path" href="{% url 'package-editor-page' package.id %}">{{package.name}}/<a class="logo-path"
+            href="{% url 'file-editor-page' file.id %}">{{file.name}}
+        </a>
 </div>
 {% endblock additional_logo_text %}
 
@@ -19,13 +26,15 @@ Files
     </a>
 </li>
 {% endfor %}
+
 {% endblock list__content %}
 
 {% block editor__title %}
-{{package.name}}
+{{file.name}}
 {% endblock editor__title %}
 
 {% block editor__content %}
+<textarea class="editor__content-area" placeholder="Начните писать здесь...">{{file.content}}</textarea>
 {% endblock editor__content %}
 
 {% block additional-block__title %}

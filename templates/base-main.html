@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block headblock %}
+<link type="text/css" href="{% static '/css/base-main.css' %}" rel="stylesheet">
+{% endblock headblock %}
+
+{% block additional_logo_text %}
+{% endblock additional_logo_text %}
+
+{% block content %}
+<div class="list">
+    <div class="list__title block-title">
+        {% block list__title %}
+        {% endblock list__title %}
+    </div>
+    <div class="list__content">
+        {% block list__content %}
+        {% endblock list__content %}
+    </div>
+</div>
+<div class="editor">
+    <div class="editor__title block-title">
+        {% block editor__title %}
+        {% endblock editor__title %}
+    </div>
+    <div class="editor__content">
+        {% block editor__content %}
+        {% endblock editor__content %}
+    </div>
+</div>
+<div class="additional-block">
+    <div class="additional-block__title block-title">
+        {% block additional-block__title %}
+        {% endblock additional-block__title %}
+    </div>
+    <div class="additional-block__content">
+        {% block additional-block__content %}
+        {% endblock additional-block__content %}
+    </div>
+</div>
+{% endblock content %}

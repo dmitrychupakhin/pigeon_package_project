@@ -1,14 +1,48 @@
 from django.conf import settings
 from django.shortcuts import redirect, render
 from .forms import *
-from .models import Package
+from .models import Package, TextFile
+from django.contrib.auth.decorators import login_required
 
-def package_editor(request, id):
+def file_editor(request, id):
+    files = TextFile.objects.all()
+    file = files.get(id=id)
+    package = file.package
     context = {
-        'MEDIA_URL': settings.MEDIA_URL,
-    }
+        'package': package,
+        'files': files,
+        'file': file,
+        'MEDIA_URL': settings.MEDIA_URL
+    } 
+    return render(request=request, template_name='pigeon_package_main_app/file-editor.html', context=context)
+
+@login_required
+def package_editor(request, id):
+    user = request.user
+    package = Package.objects.get(id=id)
+    files = TextFile.objects.filter(package=id)
+    
+    context = {}
+    
+    if request.method == 'POST':
+        form = NewFileForm(request.POST)
+        if form.is_valid():
+            package = Package.objects.get(id=id)
+            file = form.save(package=package)
+            return redirect('package-editor-page',id=id)
+        else:
+            context['form'] = form
+    else:
+        form = NewFileForm()
+        context['form'] = form
+    
+    context['MEDIA_URL'] = settings.MEDIA_URL
+    context['files'] = files
+    context['package'] = package
+    
     return render(request=request, template_name='pigeon_package_main_app/package-editor.html', context=context)
 
+@login_required
 def main(request):
     user = request.user
     packages = Package.objects.filter(users=user)

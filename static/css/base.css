@@ -45,6 +45,7 @@
 }
 
 .logo__text{
+    display: flex;
     font-size: 25px;
 }
 

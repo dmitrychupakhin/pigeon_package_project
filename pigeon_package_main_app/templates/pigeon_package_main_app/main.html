@@ -1,41 +1,36 @@
-{% extends "base.html" %}
+{% extends "base-main.html" %}
 {% load static %}
 
-{% block headblock %}
-<link type="text/css" href="{% static 'pigeon_package_main_app/css/main.css' %}" rel="stylesheet">
-{% endblock headblock %}
+{% block additional_logo_text %}
+<div class="logo-path">
+    /
+</div>
+{% endblock additional_logo_text %}
 
-{% block content %}
-<div class="packages-list">
-    <div class="packages-list__title">
-        Packages
-    </div>
-    {% if packages %}
-    {% for package in packages %}
-    <a href="{% url 'package-editor-page' id=package.id %}" class="packages-list__package">
-        <div class="packages-list__package-name">
-            {{ package.name }}
-        </div>
+{% block list__title %}
+Packages
+{% endblock list__title %}
+
+{% block list__content %}
+{% for package in packages %}
+<li>
+    <a href="{% url 'package-editor-page' package.id %}" class="list__content-item">
+        {{ package.name }}
     </a>
-    {% endfor %}
-    {% else %}
-    <div class="packages-list__message-error">На данный момент у вас нет Packages )=</div>
-    {% endif %}
-</div>
-<div class="new-package-panel">
-    <div class="new-package-panel__title">
-        New Package
-    </div>
-    <div class="new-package-panel__content">
-        <form method="post" class="new-package-panel__form">
-            {% csrf_token %}
-            {% for field in form %}
-            <div class="new-package-panel__form-item">
-                {{ field.label_tag }} {{ field }}
-            </div>
-            {% endfor %}
-            <button type="submit">Новый Package</button>
-        </form>
-    </div>
-</div>
-{% endblock content %}
+</li>
+{% endfor %}
+{% endblock list__content %}
+
+{% block editor__title %}
+PigeonPackage
+{% endblock editor__title %}
+
+{% block editor__content %}
+{% endblock editor__content %}
+
+{% block additional-block__title %}
+Полезные ссылки
+{% endblock additional-block__title %}
+
+{% block additional-block__content %}
+{% endblock additional-block__content %}
