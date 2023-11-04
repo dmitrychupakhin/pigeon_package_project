@@ -4,6 +4,7 @@
 {% block headblock %}
 <link type="text/css" href="{% static 'pigeon_package_main_app/css/file-editor.css' %}" rel="stylesheet">
 <link type="text/css" href="{% static '/css/base-main.css' %}" rel="stylesheet">
+
 {% endblock headblock %}
 
 {% block additional_logo_text %}
@@ -34,7 +35,30 @@ Files
 {% endblock editor__title %}
 
 {% block editor__content %}
-<textarea class="editor__content-area" placeholder="Начните писать здесь...">{{file.content}}</textarea>
+<div class="editor__text">
+    <textarea class="editor__text-area" id="myTextarea" oninput="autoResize(event)"
+        placeholder="Начните писать здесь...">{{file.content}}</textarea>
+</div>
+
+<script>
+    var lastcount = 0;
+    function autoResize(event) {
+
+        const textarea = event.target;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + "px";
+
+        window.scrollTo(scrollLeft, scrollTop);
+        event.preventDefault();
+    }
+    window.onload = function () {
+        const textarea = document.getElementById('myTextarea');
+        autoResize({ target: textarea });
+    };
+</script>
 {% endblock editor__content %}
 
 {% block additional-block__title %}

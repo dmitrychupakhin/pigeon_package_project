@@ -1,7 +1,18 @@
-.editor__content{
-    height: 90%;
+
+.editor__text{
+    position: relative;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
+    border: 1px solid #dedede;
+    border-radius: 6px;
+}
+
+.editor__text-area{
+    
+    resize: none;
+    border-left: 1px dashed #dedede;
+    border-right: 1px dashed #dedede;
+    margin: 10px;
 }
 
