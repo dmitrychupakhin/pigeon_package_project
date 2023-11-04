@@ -34,16 +34,20 @@
 
 .arrow_back, .add, .minimize, .zoom, .save{
     color: #000000;
+    background-color: white;
 }
 
 .editor__buttons{
     display: flex;
+    align-items: center;
     justify-content: space-between;
 }
 
 .save{
     background-color: white;
 }
+
+
 
 .delete{
     flex: 1;

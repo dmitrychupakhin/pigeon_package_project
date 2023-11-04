@@ -53,22 +53,22 @@ Files
 {% endblock editor__title %}
 
 {% block editor__buttons_left %}
-<button type="submit" href="#" onclick="submitForm()">
+<button type="submit" onclick="submitForm()">
     <span class=" material-symbols-outlined save">
         save
     </span>
 </button>
-<a href="#">
+<button onclick="increase_the_size()">
     <span class="material-symbols-outlined zoom">
         zoom_in
     </span>
-</a>
-<a href="#">
+</button>
+<button onclick="reduce_the_size()">
     <span class="material-symbols-outlined zoom">
         zoom_out
     </span>
-</a>
-<p>Количество символов: <span id="characterCount">0</span></p>
+</button>
+Chars: <span id="characterCount">0</span>
 {% endblock editor__buttons_left %}
 
 {% block editor__buttons_right %}
@@ -82,10 +82,39 @@ Files
 
 <form id="myForm" class="editor__text" action="{% url 'file-editor-page' file.id %}" method="POST">
     {% csrf_token %}
+    {{ form.font_size }}
     {{ form.content }}
 </form>
 
 <script>
+    function reduce_the_size() {
+        const textarea = document.getElementById("myTextarea");
+        const currentFontSize = window.getComputedStyle(textarea).fontSize; // Получение текущего размера шрифта
+        const currentSize = parseFloat(currentFontSize); // Преобразование размера шрифта в число
+        const newSize = currentSize - 2; // Увеличение размера шрифта на 2 пункта (можете выбрать любое увеличение)
+        textarea.style.fontSize = newSize + "px";
+        if (newSize < 0) {
+            document.getElementById('font_size').value = 0;
+        }
+        else {
+            document.getElementById('font_size').value = newSize;
+        }
+        textarea.style.overflow = 'hidden';
+    }
+    function increase_the_size() {
+        const textarea = document.getElementById("myTextarea");
+        const currentFontSize = window.getComputedStyle(textarea).fontSize; // Получение текущего размера шрифта
+        const currentSize = parseFloat(currentFontSize); // Преобразование размера шрифта в число
+        const newSize = currentSize + 2; // Увеличение размера шрифта на 2 пункта (можете выбрать любое увеличение)
+        textarea.style.fontSize = newSize + "px";
+        if (newSize < 0) {
+            document.getElementById('font_size').value = 0;
+        }
+        else {
+            document.getElementById('font_size').value = newSize;
+        }
+        textarea.style.overflow = 'hidden';
+    }
     function countCharacters() {
         const textarea = document.getElementById("myTextarea");
         const characterCount = document.getElementById("characterCount");
@@ -96,8 +125,6 @@ Files
     function submitForm() {
         // Получаем форму по её id
         var form = document.getElementById("myForm");
-
-        // Отправляем форму с помощью метода submit()
         form.submit();
     }
 
@@ -125,6 +152,8 @@ Files
     window.onload = function () {
         countCharacters();
         const textarea = document.getElementById('myTextarea');
+        var fontSize = document.getElementById('font_size').value;  // Получаем размер шрифта из скрытого поля
+        document.getElementById('myTextarea').style.fontSize = fontSize + 'px';
         autoResize({ target: textarea });
     };
 

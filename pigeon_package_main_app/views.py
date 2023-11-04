@@ -20,10 +20,8 @@ def file_editor(request, id):
     if request.method == 'POST':
         form = FileEditForm(request.POST, instance=file)
         if form.is_valid():
-            print(form)
             form.save()
             context['form'] = form
-        print(form.errors)
     
     return render(request=request, template_name='pigeon_package_main_app/file-editor.html', context=context)
 

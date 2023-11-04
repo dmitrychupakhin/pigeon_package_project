@@ -1,5 +1,7 @@
 
 .editor__text{
+    overflow: hidden;
+    resize: none;
     position: relative;
     display: grid;
     grid-template-columns: 1fr;
@@ -9,6 +11,7 @@
 }
 
 .editor__text-area{
+    overflow: hidden;
     resize: none;
     border-left: 1px dashed #dedede;
     border-right: 1px dashed #dedede;
