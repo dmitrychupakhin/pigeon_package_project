@@ -12,6 +12,7 @@ Packages
 {% endblock list__title %}
 
 {% block list__content %}
+{% if packages %}
 {% for package in packages %}
 <li>
     <a href="{% url 'package-editor-page' package.id %}" class="list__content-item">
@@ -19,18 +20,32 @@ Packages
     </a>
 </li>
 {% endfor %}
+{% else %}
+<div class="list__content-error">
+    На данный момент packages нет =(
+</div>
+{% endif %}
 {% endblock list__content %}
 
 {% block list__buttons %}
 
-<a href="#"><span class="material-symbols-outlined add">
+<button id="add_button"><span class="material-symbols-outlined add">
         add
-    </span></a>
-<a href="#">
+    </span></button>
+<button id="remove_button">
     <span class="material-symbols-outlined minimize">
         remove
     </span>
-</a>
+</button>
+
+<script>
+    document.getElementById("add_button").onclick = function () {
+        window.location.href = "{% url 'new-package' %}";
+    };
+    document.getElementById("remove_button").onclick = function () {
+        window.location.href = "{% url 'remove-package' %}";
+    };
+</script>
 
 {% endblock list__buttons %}
 

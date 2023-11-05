@@ -21,6 +21,17 @@ class NewPackageForm(forms.ModelForm):
     class Meta:
         model = Package
         fields = ('name', 'is_public')
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'my-input-class'}),
+        }
+        
+class RemovePackageForm(forms.Form):
+    packages = forms.ModelMultipleChoiceField(queryset=Package.objects.all(), widget=forms.CheckboxSelectMultiple)
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  # Извлечение пользователя из kwargs
+        super(RemovePackageForm, self).__init__(*args, **kwargs)
+        if user:
+            self.fields['packages'].queryset = Package.objects.filter(users=user)
         
 class NewFileForm(forms.ModelForm):
     class Meta:

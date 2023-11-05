@@ -12,6 +12,7 @@ Files
 {% endblock list__title %}
 
 {% block list__content %}
+{% if files %}
 {% for file in files %}
 <li>
     <a href="{% url 'file-editor-page' file.id %}" class="list__content-item">
@@ -19,6 +20,11 @@ Files
     </a>
 </li>
 {% endfor %}
+{% else %}
+<div class="list__content-error">
+    На данный момент файлов нет =(
+</div>
+{% endif %}
 {% endblock list__content %}
 
 {% block list__buttons %}
@@ -27,9 +33,9 @@ Files
         keyboard_return
     </span>
 </a>
-<a href="#"><span class="material-symbols-outlined add">
+<button href="#"><span class="material-symbols-outlined add">
         add
-    </span></a>
+    </span></button>
 <a href="#">
     <span class="material-symbols-outlined minimize">
         remove

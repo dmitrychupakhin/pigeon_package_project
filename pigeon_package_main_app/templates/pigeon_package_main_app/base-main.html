@@ -2,7 +2,9 @@
 {% load static %}
 
 {% block headblock %}
-<link type="text/css" href="{% static '/css/base-main.css' %}" rel="stylesheet">
+<link type="text/css" href="{% static '/pigeon_package_main_app/css/base-main.css' %}" rel="stylesheet">
+{% block basemainheadblock %}
+{% endblock basemainheadblock %}
 {% endblock headblock %}
 
 {% block additional_logo_text %}

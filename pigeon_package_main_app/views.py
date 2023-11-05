@@ -73,3 +73,49 @@ def main(request):
     context['MEDIA_URL'] = settings.MEDIA_URL
     context['packages'] = packages
     return render(request=request, template_name='pigeon_package_main_app/main.html', context=context)
+
+def new_package(request):
+    user = request.user
+    packages = Package.objects.filter(users=user)
+    
+    context = {}
+    
+    if request.method == 'POST':
+        form = NewPackageForm(request.POST)
+        if form.is_valid():
+            package = form.save()
+            package.users.add(request.user)
+            return redirect('main')
+        else:
+            context['form'] = form
+    else:
+        form = NewPackageForm()
+        context['form'] = form
+    
+    context['MEDIA_URL'] = settings.MEDIA_URL
+    context['packages'] = packages
+    
+    return render(request=request, template_name='pigeon_package_main_app/new_package.html', context=context)
+
+def remove_package(request):
+    user = request.user
+    packages = Package.objects.filter(users=user)
+    
+    context = {}
+    
+    if request.method == 'POST':
+        form = RemovePackageForm(request.POST, user=user)
+        if form.is_valid():
+            packages_to_delete = form.cleaned_data['packages']
+            packages_to_delete.delete()
+            return redirect('main')
+        else:
+            context['form'] = form
+    else:
+        form = RemovePackageForm(user=user)
+        context['form'] = form
+    
+    context['MEDIA_URL'] = settings.MEDIA_URL
+    context['packages'] = packages
+    
+    return render(request=request, template_name='pigeon_package_main_app/remove_package.html', context=context)

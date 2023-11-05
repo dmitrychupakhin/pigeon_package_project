@@ -5,6 +5,8 @@ class Package(models.Model):
     is_public = models.BooleanField(default=False)
     name = models.CharField(max_length=100)
     users = models.ManyToManyField(PigeonPackageUser, related_name='packages')
+    def __str__(self):
+        return self.name
     
 class TextFile(models.Model):
     name = models.CharField(max_length=100)

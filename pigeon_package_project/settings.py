@@ -58,7 +58,7 @@ ROOT_URLCONF = 'pigeon_package_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'pigeon_package_main_app/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'pigeon_package_main_app/templates/pigeon_package_main_app/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

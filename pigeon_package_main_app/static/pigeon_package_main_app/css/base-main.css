@@ -43,15 +43,16 @@
     justify-content: space-between;
 }
 
-.save{
-    background-color: white;
-}
-
-
 
 .delete{
     flex: 1;
     display: flex;
     justify-content: flex-end;
     color:rgb(179, 29, 29)
+}
+
+.list__content-error{
+    font-style: italic;
+    font-size: 15px;
+    color: #707070;
 }
