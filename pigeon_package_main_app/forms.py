@@ -32,7 +32,15 @@ class RemovePackageForm(forms.Form):
         super(RemovePackageForm, self).__init__(*args, **kwargs)
         if user:
             self.fields['packages'].queryset = Package.objects.filter(users=user)
-        
+
+class RemoveFileForm(forms.Form):
+    files = forms.ModelMultipleChoiceField(queryset=TextFile.objects.all(), widget=forms.CheckboxSelectMultiple)
+    def __init__(self, *args, **kwargs):
+        package = kwargs.pop('package', None)  # Извлечение пользователя из kwargs
+        super(RemoveFileForm, self).__init__(*args, **kwargs)
+        if package:
+            self.fields['files'].queryset = TextFile.objects.filter(package=package)
+            
 class NewFileForm(forms.ModelForm):
     class Meta:
         model = TextFile

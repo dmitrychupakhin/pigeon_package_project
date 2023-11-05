@@ -95,7 +95,7 @@ def new_package(request):
     context['MEDIA_URL'] = settings.MEDIA_URL
     context['packages'] = packages
     
-    return render(request=request, template_name='pigeon_package_main_app/new_package.html', context=context)
+    return render(request=request, template_name='pigeon_package_main_app/new-package.html', context=context)
 
 def remove_package(request):
     user = request.user
@@ -118,4 +118,54 @@ def remove_package(request):
     context['MEDIA_URL'] = settings.MEDIA_URL
     context['packages'] = packages
     
-    return render(request=request, template_name='pigeon_package_main_app/remove_package.html', context=context)
+    return render(request=request, template_name='pigeon_package_main_app/remove-package.html', context=context)
+
+def new_file(request, id):
+    user = request.user
+    package = Package.objects.get(id=id)
+    files = TextFile.objects.filter(package=id)
+    
+    context = {}
+    
+    if request.method == 'POST':
+        form = NewFileForm(request.POST)
+        if form.is_valid():
+            package = Package.objects.get(id=id)
+            file = form.save(package=package)
+            return redirect('package-editor-page',id=id)
+        else:
+            context['form'] = form
+    else:
+        form = NewFileForm()
+        context['form'] = form
+    
+    context['MEDIA_URL'] = settings.MEDIA_URL
+    context['files'] = files
+    context['package'] = package
+    
+    return render(request=request, template_name='pigeon_package_main_app/new-file.html', context=context)
+
+def remove_file(request, id):
+    user = request.user
+    package = Package.objects.get(id=id)
+    files = TextFile.objects.filter(package=id)
+    
+    context = {}
+    
+    if request.method == 'POST':
+        form = RemoveFileForm(request.POST, package=package)
+        if form.is_valid():
+            files_to_delete = form.cleaned_data['files']
+            files_to_delete.delete()
+            return redirect('package-editor-page', id)
+        else:
+            context['form'] = form
+    else:
+        form = RemoveFileForm( package=package)
+        context['form'] = form
+    
+    context['package'] = package
+    context['MEDIA_URL'] = settings.MEDIA_URL
+    context['files'] = files
+    
+    return render(request=request, template_name='pigeon_package_main_app/remove-file.html', context=context)   

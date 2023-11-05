@@ -1,0 +1,23 @@
+{% extends "main-content-base.html" %}
+{% load static %}
+
+{% block additional_logo_text %}
+<div class="logo-path">
+    /RemovePackage
+</div>
+{% endblock additional_logo_text %}
+
+{% block editor__title %}
+PigeonPackage/RemovePackage
+{% endblock editor__title %}
+
+{% block editor__content %}
+<div class="editor-content-base-content">
+    <div class="editor-content-base-content__title">Remove<span class="remove">Package</span></div>
+    <form method="POST" class="editor-content-base-content__form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="editor-content-base-content__form-button">RemovePackage</button>
+    </form>
+</div>
+{% endblock editor__content %}

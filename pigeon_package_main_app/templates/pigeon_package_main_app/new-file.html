@@ -1,0 +1,23 @@
+{% extends 'package-editor-content-base.html' %}
+{% load static %}
+
+{% block additional_logo_text %}
+<div class="logo-path">
+    /<a class="logo-path" href="{% url 'package-editor-page' package.id %}">{{package.name}}</a>/NewFile
+</div>
+{% endblock additional_logo_text %}
+
+{% block editor__title %}
+{{package.name}}/NewFile
+{% endblock editor__title %}
+
+{% block editor__content %}
+<div class="editor-content-package-editor-content">
+    <div class="editor-content-package-editor-content__title">New<span class="pigeon">File</span></div>
+    <form method="POST" class="editor-content-package-editor-content__form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="editor-content-package-editor-content__form-button">NewFile</button>
+    </form>
+</div>
+{% endblock editor__content %}

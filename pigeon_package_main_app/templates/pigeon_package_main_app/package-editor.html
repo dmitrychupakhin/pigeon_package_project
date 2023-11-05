@@ -28,20 +28,30 @@ Files
 {% endblock list__content %}
 
 {% block list__buttons %}
-<a href="{% url 'main' %}">
+<button id="return_button">
     <span class="material-symbols-outlined arrow_back">
         keyboard_return
     </span>
-</a>
-<button href="#"><span class="material-symbols-outlined add">
+</button>
+<button id="add_button"><span class="material-symbols-outlined add">
         add
     </span></button>
-<a href="#">
+<button id="remove_button">
     <span class="material-symbols-outlined minimize">
         remove
     </span>
-</a>
-
+</button>
+<script>
+    document.getElementById("remove_button").onclick = function () {
+        window.location.href = "{% url 'remove-file' package.id %}";
+    };
+    document.getElementById("add_button").onclick = function () {
+        window.location.href = "{% url 'new-file' package.id %}";
+    };
+    document.getElementById("return_button").onclick = function () {
+        window.location.href = "{% url 'main' %}";
+    };
+</script>
 {% endblock list__buttons %}
 
 {% block editor__title %}

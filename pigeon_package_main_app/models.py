@@ -16,5 +16,7 @@ class TextFile(models.Model):
     
     class Meta:
         unique_together = ('name', 'package',)
+    def __str__(self):
+        return self.name
         
     
