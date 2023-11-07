@@ -5,33 +5,3 @@
 <link type="text/css" href="{% static 'pigeon_package_main_app/css/package-editor-content-base.css' %}"
     rel="stylesheet">
 {% endblock basemainheadblock %}
-
-{% block list__buttons %}
-<button id="return_button">
-    <span class="material-symbols-outlined arrow_back">
-        keyboard_return
-    </span>
-</button>
-<button id="add_button">
-    <span class="material-symbols-outlined add">
-        add
-    </span>
-</button>
-<button id="remove_button">
-    <span class="material-symbols-outlined minimize">
-        remove
-    </span>
-</button>
-
-<script>
-    document.getElementById("remove_button").onclick = function () {
-        window.location.href = "{% url 'remove-file' package.id %}";
-    };
-    document.getElementById("add_button").onclick = function () {
-        window.location.href = "{% url 'new-file' package.id %}";
-    };
-    document.getElementById("return_button").onclick = function () {
-        window.location.href = "{% url 'main' %}";
-    };
-</script>
-{% endblock list__buttons %}

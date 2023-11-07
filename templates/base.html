@@ -31,7 +31,7 @@
                 <a href="{% url 'profile' %}" class="user-username user-auth-profile__button">
                     {{ user.username }}
                 </a>
-                <a href="registration"><span class="material-symbols-outlined user-auth-profile__button">
+                <a href="{% url 'invitations' %}"><span class="material-symbols-outlined user-auth-profile__button">
                         mail
                     </span></a>
                 <img class="user-registration user-auth-profile__img" src="{{ MEDIA_URL }}{{user.profile_picture }}"

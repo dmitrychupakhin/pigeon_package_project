@@ -1,9 +1,10 @@
 from django.conf import settings
 from django.shortcuts import redirect, render
 from .forms import *
-from .models import Package, TextFile
+from .models import Package, TextFile, PackageInvitation
 from django.contrib.auth.decorators import login_required
 
+@login_required
 def file_editor(request, id):
     files = TextFile.objects.all()
     file = files.get(id=id)
@@ -74,6 +75,7 @@ def main(request):
     context['packages'] = packages
     return render(request=request, template_name='pigeon_package_main_app/main.html', context=context)
 
+@login_required
 def new_package(request):
     user = request.user
     packages = Package.objects.filter(users=user)
@@ -97,6 +99,7 @@ def new_package(request):
     
     return render(request=request, template_name='pigeon_package_main_app/new-package.html', context=context)
 
+@login_required
 def remove_package(request):
     user = request.user
     packages = Package.objects.filter(users=user)
@@ -120,6 +123,7 @@ def remove_package(request):
     
     return render(request=request, template_name='pigeon_package_main_app/remove-package.html', context=context)
 
+@login_required
 def new_file(request, id):
     user = request.user
     package = Package.objects.get(id=id)
@@ -145,7 +149,9 @@ def new_file(request, id):
     
     return render(request=request, template_name='pigeon_package_main_app/new-file.html', context=context)
 
+@login_required
 def remove_file(request, id):
+    
     user = request.user
     package = Package.objects.get(id=id)
     files = TextFile.objects.filter(package=id)
@@ -169,3 +175,58 @@ def remove_file(request, id):
     context['files'] = files
     
     return render(request=request, template_name='pigeon_package_main_app/remove-file.html', context=context)   
+
+@login_required
+def invitations(request):
+    context = {
+        'MEDIA_URL': settings.MEDIA_URL
+    }
+    return render(request=request, template_name='pigeon_package_main_app/invitations.html', context=context)
+
+@login_required
+def incoming_invitations(request):
+    user = request.user
+    invitations = PackageInvitation.objects.filter(recipient=user)
+    context = {
+        'MEDIA_URL': settings.MEDIA_URL,
+        'invitations': invitations
+    }
+    return render(request=request, template_name='pigeon_package_main_app/incoming-invitations.html', context=context)
+
+@login_required
+def outgoing_invitations(request):
+    user = request.user
+    invitations = PackageInvitation.objects.filter(sender=user)
+    context = {
+        'MEDIA_URL': settings.MEDIA_URL,
+        'invitations': invitations
+    }
+    return render(request=request, template_name='pigeon_package_main_app/outgoing-invitations.html', context=context)
+
+@login_required
+def new_invitation(request, id):
+    user = request.user
+    package = Package.objects.get(id=id)
+    files = TextFile.objects.filter(package=id)
+    context = {}
+    context['package'] = package
+    context['files'] = files
+    context['MEDIA_URL'] = settings.MEDIA_URL
+    
+    if request.method == 'POST':
+        form = PackageInvitationForm(request.POST)
+        if form.is_valid():
+            recipient = form.cleaned_data['username']
+            invitation = PackageInvitation(
+            project=package,
+            sender=user,
+            recipient=recipient,
+            is_accepted=False
+        )
+        invitation.save()
+        return redirect('main')  # Перенаправляем на страницу успеха или другую страницу
+    else:
+        form = PackageInvitationForm()
+    
+    context['form'] = form
+    return render(request, 'pigeon_package_main_app/package-new-invitation.html', context)

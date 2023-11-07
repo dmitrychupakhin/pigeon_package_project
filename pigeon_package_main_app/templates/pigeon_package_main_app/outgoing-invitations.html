@@ -1,0 +1,19 @@
+{% extends "invitations.html" %}
+{% load static %}
+
+{% block additional_logo_text %}
+<div class="logo-path">
+    /Invitations/OutgoingInvitations
+</div>
+{% endblock additional_logo_text %}
+
+{% block editor__content %}
+{% for invitation in invitations %}
+<div class="invitation">
+    <div class="invitation__project"></div>
+    <div class="invitation__sender"></div>
+    <div class="invitation__recipient"></div>
+    <div class="invitation__status"></div>
+</div>
+{% endfor %}
+{% endblock editor__content %}

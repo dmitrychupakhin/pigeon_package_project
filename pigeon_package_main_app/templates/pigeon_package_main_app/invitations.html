@@ -1,0 +1,33 @@
+{% extends "base-main.html" %}
+{% load static %}
+
+{% block basemainheadblock %}
+<link type="text/css" href="{% static 'pigeon_package_main_app/css/invitations.css' %}" rel="stylesheet">
+{% endblock basemainheadblock %}
+
+{% block additional_logo_text %}
+<div class="logo-path">
+    /Invitations
+</div>
+{% endblock additional_logo_text %}
+
+{% block editor__title %}
+Invitations
+{% endblock editor__title %}
+
+{% block editor__buttons_left %}
+<button id="arrow_upward_button"><span class="material-symbols-outlined button">
+        arrow_downward
+    </span></button>
+<button id="arrow_downward_button"><span class="material-symbols-outlined button">
+        arrow_upward
+    </span></button>
+<script>
+    document.getElementById("arrow_upward_button").onclick = function () {
+        window.location.href = "{% url 'incoming_invitations' %}";
+    };
+    document.getElementById("arrow_downward_button").onclick = function () {
+        window.location.href = "{% url 'outgoing_invitations' %}";
+    };
+</script>
+{% endblock editor__buttons_left %}

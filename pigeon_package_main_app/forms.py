@@ -1,5 +1,6 @@
 from django import forms
-from .models import Package, TextFile
+from .models import *
+from django.core.exceptions import ValidationError
 
 class FileEditForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea(attrs={'class': 'myTextarea editor__text-area', 'id': 'myTextarea'}), required=False, strip=False)
@@ -52,3 +53,12 @@ class NewFileForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+    
+class PackageInvitationForm(forms.Form):
+    username = forms.CharField(label='Имя пользователя')
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if not PigeonPackageUser.objects.filter(username=username).exists():
+            raise forms.ValidationError("Пользователь не найден")
+        return username

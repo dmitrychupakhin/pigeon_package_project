@@ -64,6 +64,16 @@ Files
         settings
     </span>
 </a>
+<button id="forward_to_inbox">
+    <span class="material-symbols-outlined button">
+        forward_to_inbox
+    </span>
+</button>
+<script>
+    document.getElementById("forward_to_inbox").onclick = function () {
+        window.location.href = "{% url 'new-invitation' package.id %}";
+    };
+</script>
 {% endblock editor__buttons_left %}
 
 {% block editor__buttons_right %}

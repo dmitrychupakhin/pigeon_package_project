@@ -80,3 +80,12 @@
     object-fit: cover;
     margin-left: 20px;
 }
+
+.logo-path {
+    color: rgb(176, 176, 176);
+}
+
+.button{
+    color: #000000;
+    background-color: white;
+}

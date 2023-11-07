@@ -1,0 +1,10 @@
+{% extends "package-editor.html" %}
+{% load static %}
+
+{% block editor__content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Отправить</button>
+</form>
+{% endblock editor__content %}
