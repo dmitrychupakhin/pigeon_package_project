@@ -19,8 +19,8 @@
     <div class="invitation__package">Package: {{invitation.package}}</div>
     <div class="invitation__sender">Sender: {{invitation.sender}}</div>
     <div class="invitation__recipient">Recipient: {{invitation.recipient}}</div>
-    <a href="{% url 'accept_invitation_invitation' invitation.id %}" class="invitation__button">Принять</a>
-    <a href="{% url 'reject_invitation_invitation' invitation.id %}" class="invitation__button">Отклонить</a>
+    <a href="{% url 'accept_invitation' invitation.id %}" class="invitation__button">Принять</a>
+    <a href="{% url 'reject_invitation_incoming' invitation.id %}" class="invitation__button">Отклонить</a>
 </div>
 {% endfor %}
 

@@ -112,6 +112,9 @@ def remove_package(request):
             packages_to_delete = form.cleaned_data['packages']
             for package_to_delete in packages_to_delete:
                 package_to_delete.users.remove(user)
+                if package_to_delete.users.count() == 0:
+                    package_to_delete.delete()
+            
             return redirect('main')
         else:
             context['form'] = form
