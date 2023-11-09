@@ -11,6 +11,12 @@
 {{package.name}}/NewFile
 {% endblock editor__title %}
 
+{% block add_button %}
+<button class="active_button" id="add_button"><span class="material-symbols-outlined add">
+        add
+    </span></button>
+{% endblock add_button %}
+
 {% block editor__content %}
 <div class="editor-content-package-editor-content">
     <div class="editor-content-package-editor-content__title">New<span class="pigeon">File</span></div>

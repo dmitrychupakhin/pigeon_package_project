@@ -20,7 +20,7 @@ class TextFile(models.Model):
         return self.name
         
 class PackageInvitation(models.Model):
-    project = models.ForeignKey(Package, on_delete=models.CASCADE)
+    package = models.ForeignKey(Package, on_delete=models.CASCADE)
     sender = models.ForeignKey(PigeonPackageUser, on_delete=models.CASCADE, related_name='invitations_sent')
     recipient = models.ForeignKey(PigeonPackageUser, on_delete=models.CASCADE, related_name='invitations_received')
     is_accepted = models.BooleanField(default=False)

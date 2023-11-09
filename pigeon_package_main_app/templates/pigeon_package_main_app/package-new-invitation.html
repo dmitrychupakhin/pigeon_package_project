@@ -1,6 +1,14 @@
 {% extends "package-editor.html" %}
 {% load static %}
 
+{% block forward_to_inbox_button %}
+<button class="active_button" id="forward_to_inbox">
+    <span class="material-symbols-outlined button">
+        forward_to_inbox
+    </span>
+</button>
+{% endblock forward_to_inbox_button %}
+
 {% block editor__content %}
 <form method="post">
     {% csrf_token %}

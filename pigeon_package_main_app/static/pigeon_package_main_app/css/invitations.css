@@ -2,4 +2,34 @@
     border: 1px solid transparent;
 }
 
+.editor__content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
+.invitation{
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    justify-content: center;
+    border: 1px solid #dedede;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.invitation__package{
+    color: rgb(89, 130, 184);
+}
+
+.invitation__button{
+    border: 1px solid #dedede;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    color: black;
+    display: flex;
+    justify-content: center;
+}

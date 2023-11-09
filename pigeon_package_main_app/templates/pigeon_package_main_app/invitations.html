@@ -16,12 +16,17 @@ Invitations
 {% endblock editor__title %}
 
 {% block editor__buttons_left %}
+{% block arrow_downwardblock %}
 <button id="arrow_upward_button"><span class="material-symbols-outlined button">
         arrow_downward
     </span></button>
+{% endblock arrow_downwardblock %}
+{% block arrow_upwardblock %}
 <button id="arrow_downward_button"><span class="material-symbols-outlined button">
         arrow_upward
     </span></button>
+{% endblock arrow_upwardblock %}
+
 <script>
     document.getElementById("arrow_upward_button").onclick = function () {
         window.location.href = "{% url 'incoming_invitations' %}";

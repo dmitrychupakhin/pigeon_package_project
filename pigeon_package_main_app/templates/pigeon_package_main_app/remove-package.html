@@ -11,6 +11,14 @@
 PigeonPackage/RemovePackage
 {% endblock editor__title %}
 
+{% block removebutton %}
+<button class="active_button" id="remove_button">
+    <span class="material-symbols-outlined minimize">
+        remove
+    </span>
+</button>
+{% endblock removebutton %}
+
 {% block editor__content %}
 <div class="editor-content-base-content">
     <div class="editor-content-base-content__title">Remove<span class="remove">Package</span></div>

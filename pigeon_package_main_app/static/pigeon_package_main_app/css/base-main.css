@@ -12,16 +12,31 @@
     padding: 10px;
     border: 1px solid #dedede;
     border-radius: 6px;
+        max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
 }
-
-
 
 .block-title{
     border-bottom: 1px solid #dedede;
+        max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
 }
 
 .list__content-item{
+
     color: black;
+}
+
+.list__content-item_active {
+    color: rgb(151, 202, 0);
+}
+
+.list__content-item:active {
+    color: rgb(151, 202, 0);
 }
 
 .block-buttons{

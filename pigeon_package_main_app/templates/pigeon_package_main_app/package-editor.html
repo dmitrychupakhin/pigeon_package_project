@@ -33,14 +33,18 @@ Files
         keyboard_return
     </span>
 </button>
+{% block add_button %}
 <button id="add_button"><span class="material-symbols-outlined add">
         add
     </span></button>
+{% endblock add_button %}
+{% block remove_button %}
 <button id="remove_button">
     <span class="material-symbols-outlined minimize">
         remove
     </span>
 </button>
+{% endblock remove_button %}
 <script>
     document.getElementById("remove_button").onclick = function () {
         window.location.href = "{% url 'remove-file' package.id %}";
@@ -64,11 +68,14 @@ Files
         settings
     </span>
 </a>
+{% block forward_to_inbox_button %}
 <button id="forward_to_inbox">
     <span class="material-symbols-outlined button">
         forward_to_inbox
     </span>
 </button>
+{% endblock forward_to_inbox_button %}
+
 <script>
     document.getElementById("forward_to_inbox").onclick = function () {
         window.location.href = "{% url 'new-invitation' package.id %}";

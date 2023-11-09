@@ -18,11 +18,17 @@ Files
 {% endblock list__title %}
 
 {% block list__content %}
-{% for file in files %}
+{% for f in files %}
 <li>
-    <a href="{% url 'file-editor-page' file.id %}" class="list__content-item">
-        {{ file.name }}
+    {% if f == file %}
+    <a href="{% url 'file-editor-page' f.id %}" class="list__content-item list__content-item_active">
+        {{ f.name }}
     </a>
+    {% else %}
+    <a href="{% url 'file-editor-page' f.id %}" class="list__content-item">
+        {{ f.name }}
+    </a>
+    {% endif %}
 </li>
 {% endfor %}
 
@@ -110,6 +116,8 @@ Chars: <span id="characterCount">0</span>
             document.getElementById('font_size').value = newSize;
         }
         textarea.style.overflow = 'hidden';
+
+
     }
     function increase_the_size() {
         const textarea = document.getElementById("myTextarea");

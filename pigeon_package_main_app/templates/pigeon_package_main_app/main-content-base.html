@@ -6,21 +6,20 @@
 {% endblock basemainheadblock %}
 
 {% block list__buttons %}
-<button id="return_button">
-    <span class="material-symbols-outlined arrow_back">
-        keyboard_return
-    </span>
-</button>
+{% block addbutton %}
 <button id="add_button">
     <span class="material-symbols-outlined add">
         add
     </span>
 </button>
+{% endblock addbutton %}
+{% block removebutton %}
 <button id="remove_button">
     <span class="material-symbols-outlined minimize">
         remove
     </span>
 </button>
+{% endblock removebutton %}
 
 <script>
     document.getElementById("remove_button").onclick = function () {

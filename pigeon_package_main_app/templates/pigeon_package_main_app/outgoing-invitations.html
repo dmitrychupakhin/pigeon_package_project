@@ -7,13 +7,19 @@
 </div>
 {% endblock additional_logo_text %}
 
+{% block arrow_upwardblock %}
+<button class="active_button" id="arrow_downward_button"><span class="material-symbols-outlined button">
+        arrow_upward
+    </span></button>
+{% endblock arrow_upwardblock %}
+
 {% block editor__content %}
 {% for invitation in invitations %}
 <div class="invitation">
-    <div class="invitation__project"></div>
-    <div class="invitation__sender"></div>
-    <div class="invitation__recipient"></div>
-    <div class="invitation__status"></div>
+    <div class="invitation__package">Package: {{invitation.package}}</div>
+    <div class="invitation__sender">Sender: {{invitation.sender}}</div>
+    <div class="invitation__recipient">Recipient: {{invitation.recipient}}</div>
+    <a href="{% url 'reject_invitation_outgoing' invitation.id %}" class="invitation__button">Отклонить</a>
 </div>
 {% endfor %}
 {% endblock editor__content %}

@@ -54,7 +54,7 @@ class NewFileForm(forms.ModelForm):
             instance.save()
         return instance
     
-class PackageInvitationForm(forms.Form):
+class PigeonPackageUserGetForm(forms.Form):
     username = forms.CharField(label='Имя пользователя')
 
     def clean_username(self):

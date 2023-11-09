@@ -6,9 +6,9 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def file_editor(request, id):
-    files = TextFile.objects.all()
-    file = files.get(id=id)
+    file = TextFile.objects.get(id=id)
     package = file.package
+    files = TextFile.objects.filter(package=package)
     form = FileEditForm(instance=file)
     context = {
         'form': form,
@@ -110,7 +110,8 @@ def remove_package(request):
         form = RemovePackageForm(request.POST, user=user)
         if form.is_valid():
             packages_to_delete = form.cleaned_data['packages']
-            packages_to_delete.delete()
+            for package_to_delete in packages_to_delete:
+                package_to_delete.users.remove(user)
             return redirect('main')
         else:
             context['form'] = form
@@ -214,19 +215,44 @@ def new_invitation(request, id):
     context['MEDIA_URL'] = settings.MEDIA_URL
     
     if request.method == 'POST':
-        form = PackageInvitationForm(request.POST)
+        form = PigeonPackageUserGetForm(request.POST)
         if form.is_valid():
-            recipient = form.cleaned_data['username']
+            recipient = PigeonPackageUser.objects.get(username=form.cleaned_data['username']) 
             invitation = PackageInvitation(
-            project=package,
+            package=package,
             sender=user,
             recipient=recipient,
-            is_accepted=False
-        )
-        invitation.save()
-        return redirect('main')  # Перенаправляем на страницу успеха или другую страницу
+            is_accepted=False)
+            
+            if (PackageInvitation.objects.filter(package=package, sender=user, recipient=recipient)) or (user == recipient) or package.users.filter(id=recipient.id):
+                return redirect('new-invitation', id)
+            else:
+                invitation.save()
+            return redirect('new-invitation', id)  # Перенаправляем на страницу успеха или другую страницу
+        else:
+            context['form'] = form
     else:
-        form = PackageInvitationForm()
+        form = PigeonPackageUserGetForm()
+        context['form'] = form
     
-    context['form'] = form
     return render(request, 'pigeon_package_main_app/package-new-invitation.html', context)
+
+@login_required
+def accept_invitation(request, id):
+    invitation = PackageInvitation.objects.get(id=id)
+    package = invitation.package
+    package.users.add(invitation.recipient)
+    invitation.delete()
+    return redirect('incoming_invitations')
+
+@login_required
+def reject_invitation_incoming(request, id):
+    invitation = PackageInvitation.objects.get(id=id)
+    invitation.delete()
+    return redirect('incoming_invitations')
+
+@login_required
+def reject_invitation_outgoing(request, id):
+    invitation = PackageInvitation.objects.get(id=id)
+    invitation.delete()
+    return redirect('outgoing_invitations')

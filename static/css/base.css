@@ -7,6 +7,8 @@
     min-height: 100vh;
     margin: 0;
     width: 100%;
+    white-space: nowrap;
+
 }
 
 .content{
@@ -88,4 +90,18 @@
 .button{
     color: #000000;
     background-color: white;
+}
+
+.active_button{
+    background-color: rgb(151, 202, 0);
+}
+
+.active_text{
+    color: rgb(151, 202, 0);
+}
+
+
+
+button:active{
+    background-color: rgb(151, 202, 0);
 }
