@@ -259,3 +259,25 @@ def reject_invitation_outgoing(request, id):
     invitation = PackageInvitation.objects.get(id=id)
     invitation.delete()
     return redirect('outgoing_invitations')
+
+@login_required
+def package_settings(request, id):
+    user = request.user
+    package = Package.objects.get(id=id)
+    
+    context = {
+        'package': package
+    }
+    context['MEDIA_URL'] = settings.MEDIA_URL
+    
+    if request.method == 'POST':
+        form = SettigsPackageForm(request.POST, instance=package)
+        if form.is_valid():
+            form.save()
+        else:
+            context['form'] = form
+        return redirect('package-settings', id) 
+    else:
+        context['form'] = SettigsPackageForm(instance=package)
+    
+    return render(request, 'pigeon_package_main_app/package-settings.html', context)

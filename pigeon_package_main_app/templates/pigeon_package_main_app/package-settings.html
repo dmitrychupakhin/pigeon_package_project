@@ -1,0 +1,31 @@
+{% extends "package-editor-content-base.html" %}
+{% load static %}
+
+{% block additional_logo_text %}
+<div class="logo-path">
+    /{{package}}/PackageSettings
+</div>
+{% endblock additional_logo_text %}
+
+{% block settings_button %}
+<button class="active_button" id="settings">
+    <span class="material-symbols-outlined zoom">
+        settings
+    </span>
+</button>
+{% endblock settings_button %}
+
+{% block editor__title %}
+{{package}}/PackageSettings
+{% endblock editor__title %}
+
+{% block editor__content %}
+<div class="editor-content-package-editor-content">
+    <div class="editor-content-package-editor-content__title">Settings <span class="package">Package</span></div>
+    <form method="POST" class="editor-content-package-editor-content__form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="editor-content-package-editor-content__form-button">Save</button>
+    </form>
+</div>
+{% endblock editor__content %}

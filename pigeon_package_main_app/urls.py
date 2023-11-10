@@ -16,4 +16,5 @@ urlpatterns = [
     path('accept_invitation/<int:id>', accept_invitation, name='accept_invitation'),
     path('reject_invitation_incoming/<int:id>', reject_invitation_incoming, name='reject_invitation_incoming'),
     path('reject_invitation_outgoing/<int:id>', reject_invitation_outgoing, name='reject_invitation_outgoing'),
+    path('package-settings/<int:id>', package_settings, name='package-settings'),
 ]

@@ -63,11 +63,14 @@ Files
 {% endblock editor__title %}
 
 {% block editor__buttons_left %}
-<a href="settins">
+{% block settings_button %}
+<button id="settings">
     <span class="material-symbols-outlined zoom">
         settings
     </span>
-</a>
+</button>
+{% endblock settings_button %}
+
 {% block forward_to_inbox_button %}
 <button id="forward_to_inbox">
     <span class="material-symbols-outlined button">
@@ -76,7 +79,18 @@ Files
 </button>
 {% endblock forward_to_inbox_button %}
 
+{% block link_button %}
+<button id="link">
+    <span class="material-symbols-outlined button">
+        link
+    </span>
+</button>
+{% endblock link_button %}
+
 <script>
+    document.getElementById("settings").onclick = function () {
+        window.location.href = "{% url 'package-settings' package.id %}";
+    }
     document.getElementById("forward_to_inbox").onclick = function () {
         window.location.href = "{% url 'new-invitation' package.id %}";
     };

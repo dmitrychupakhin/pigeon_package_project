@@ -1,4 +1,4 @@
-{% extends "package-editor.html" %}
+{% extends "package-editor-content-base.html" %}
 {% load static %}
 
 {% block forward_to_inbox_button %}
@@ -10,9 +10,12 @@
 {% endblock forward_to_inbox_button %}
 
 {% block editor__content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Отправить</button>
-</form>
+<div class="editor-content-package-editor-content">
+    <div class="editor-content-package-editor-content__title">New <span class="package">Invitation</span></div>
+    <form method="POST" class="editor-content-package-editor-content__form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="editor-content-package-editor-content__form-button">Sent</button>
+    </form>
+</div>
 {% endblock editor__content %}

@@ -25,7 +25,15 @@ class NewPackageForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'my-input-class'}),
         }
-        
+
+class SettigsPackageForm(forms.ModelForm):
+    class Meta:
+        model = Package
+        fields = ('name', 'is_public')
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'my-input-class'}),
+        }
+    
 class RemovePackageForm(forms.Form):
     packages = forms.ModelMultipleChoiceField(queryset=Package.objects.all(), widget=forms.CheckboxSelectMultiple)
     def __init__(self, *args, **kwargs):
