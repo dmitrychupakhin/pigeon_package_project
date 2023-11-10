@@ -1,0 +1,31 @@
+{% extends "package-editor-content-base.html" %}
+{% load static %}
+
+{% block additional_logo_text %}
+<div class="logo-path">
+    /{{package}}/ManageUsers
+</div>
+{% endblock additional_logo_text %}
+
+{% block manage_button %}
+<button class="active_button" id="manage_accounts">
+    <span class="material-symbols-outlined button">
+        manage_accounts
+    </span>
+</button>
+{% endblock manage_button %}
+
+{% block editor__title %}
+{{package}}/PackageSettings
+{% endblock editor__title %}
+
+{% block editor__content %}
+<div class="editor-content-package-editor-content">
+    <div class="editor-content-package-editor-content__title">Manage <span class="pigeon">Pigeons</span></div>
+    <form method="POST" class="editor-content-package-editor-content__form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="editor-content-package-editor-content__form-button">Delete</button>
+    </form>
+</div>
+{% endblock editor__content %}

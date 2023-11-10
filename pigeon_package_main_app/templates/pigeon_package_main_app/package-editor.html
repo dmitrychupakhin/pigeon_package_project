@@ -71,6 +71,14 @@ Files
 </button>
 {% endblock settings_button %}
 
+{% block manage_button %}
+<button id="manage_accounts">
+    <span class="material-symbols-outlined button">
+        manage_accounts
+    </span>
+</button>
+{% endblock manage_button %}
+
 {% block forward_to_inbox_button %}
 <button id="forward_to_inbox">
     <span class="material-symbols-outlined button">
@@ -87,7 +95,11 @@ Files
 </button>
 {% endblock link_button %}
 
+
 <script>
+    document.getElementById("manage_accounts").onclick = function () {
+        window.location.href = "{% url 'manage-users' package.id %}";
+    }
     document.getElementById("settings").onclick = function () {
         window.location.href = "{% url 'package-settings' package.id %}";
     }

@@ -33,7 +33,24 @@ class SettigsPackageForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'my-input-class'}),
         }
-    
+        
+class ManageUsersPackageForm(forms.Form):
+    users = forms.ModelMultipleChoiceField(
+        queryset=PigeonPackageUser.objects.all(),
+        widget=forms.CheckboxSelectMultiple(),
+    )
+
+    def __init__(self, *args, **kwargs):
+        package_id = kwargs.pop('package_id', None)
+        super(ManageUsersPackageForm, self).__init__(*args, **kwargs)
+
+        if package_id is not None:
+            # Фильтруем queryset только для пользователей, владеющих данным пакетом
+            self.fields['users'] = forms.ModelMultipleChoiceField(
+                queryset=PigeonPackageUser.objects.filter(packages__id=package_id),
+                widget=forms.CheckboxSelectMultiple(),
+            )
+
 class RemovePackageForm(forms.Form):
     packages = forms.ModelMultipleChoiceField(queryset=Package.objects.all(), widget=forms.CheckboxSelectMultiple)
     def __init__(self, *args, **kwargs):

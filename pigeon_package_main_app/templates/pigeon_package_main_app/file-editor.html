@@ -117,7 +117,7 @@ Chars: <span id="characterCount">0</span>
         }
         textarea.style.overflow = 'hidden';
 
-
+        autoResize({ target: textarea });
     }
     function increase_the_size() {
         const textarea = document.getElementById("myTextarea");
@@ -132,6 +132,8 @@ Chars: <span id="characterCount">0</span>
             document.getElementById('font_size').value = newSize;
         }
         textarea.style.overflow = 'hidden';
+
+        autoResize({ target: textarea });
     }
     function countCharacters() {
         const textarea = document.getElementById("myTextarea");

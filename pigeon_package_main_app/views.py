@@ -281,3 +281,23 @@ def package_settings(request, id):
         context['form'] = SettigsPackageForm(instance=package)
     
     return render(request, 'pigeon_package_main_app/package-settings.html', context)
+
+@login_required
+def manage_users(request, id):
+    package = Package.objects.get(pk=id)
+
+    if request.method == 'POST':
+        form = ManageUsersPackageForm(request.POST, package_id=id)
+        if form.is_valid():
+            selected_users = form.cleaned_data['users']
+            package.users.remove(*selected_users)
+            if package.users.count() == 0:
+                package.delete()
+                return redirect('main')
+            return redirect('manage-users', id)
+    else:
+        form = ManageUsersPackageForm(package_id=id)
+
+    context = {'package': package, 'form': form}
+    
+    return render(request, 'package-manage-users.html', context)
