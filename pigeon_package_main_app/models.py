@@ -12,7 +12,6 @@ class TextFile(models.Model):
     name = models.CharField(max_length=100)
     content = models.TextField(null=True)
     package = models.ForeignKey(Package, on_delete=models.CASCADE, related_name='files')
-    font_size = models.PositiveIntegerField(default=12, null=True)
     
     class Meta:
         unique_together = ('name', 'package',)

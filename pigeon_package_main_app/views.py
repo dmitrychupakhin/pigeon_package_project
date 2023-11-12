@@ -299,5 +299,6 @@ def manage_users(request, id):
         form = ManageUsersPackageForm(package_id=id)
 
     context = {'package': package, 'form': form}
+    context['MEDIA_URL'] = settings.MEDIA_URL
     
     return render(request, 'package-manage-users.html', context)

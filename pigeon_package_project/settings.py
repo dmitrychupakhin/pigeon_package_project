@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'django_cleanup',
     'pigeon_package_account_app',
     'pigeon_package_main_app',
@@ -71,8 +73,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'pigeon_package_project.wsgi.application'
-
+ASGI_APPLICATION = 'pigeon_package_project.asgi.application'
+#WSGI_APPLICATION = 'pigeon_package_project.wsgi.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # Или другой бэкенд по вашему выбору
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

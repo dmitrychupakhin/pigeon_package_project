@@ -52,10 +52,16 @@
     </div>
     <div class="additional-block__buttons block-buttons">
         {% block additional-block__buttons %}
+        <a href="settings">
+            <span class="material-symbols-outlined zoom">
+                settings
+            </span>
+        </a>
         {% endblock additional-block__buttons %}
     </div>
     <div class="additional-block__content">
         {% block additional-block__content %}
+        <div style="font-style: italic;" class="error-message">В разработке</div>
         {% endblock additional-block__content %}
     </div>
 </div>

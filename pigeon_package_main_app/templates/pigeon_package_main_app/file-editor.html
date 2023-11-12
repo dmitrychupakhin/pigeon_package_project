@@ -98,65 +98,35 @@ Chars: <span id="characterCount">0</span>
 
 <form id="myForm" class="editor__text" action="{% url 'file-editor-page' file.id %}" method="POST">
     {% csrf_token %}
-    {{ form.font_size }}
     {{ form.content }}
 </form>
 
 <script>
-    function reduce_the_size() {
-        const textarea = document.getElementById("myTextarea");
-        const currentFontSize = window.getComputedStyle(textarea).fontSize; // Получение текущего размера шрифта
-        const currentSize = parseFloat(currentFontSize); // Преобразование размера шрифта в число
-        const newSize = currentSize - 2; // Увеличение размера шрифта на 2 пункта (можете выбрать любое увеличение)
-        textarea.style.fontSize = newSize + "px";
-        if (newSize < 0) {
-            document.getElementById('font_size').value = 0;
-        }
-        else {
-            document.getElementById('font_size').value = newSize;
-        }
-        textarea.style.overflow = 'hidden';
+    const socket = new WebSocket(`ws://${window.location.host}/ws/file/{{ file.id }}/`);
 
-        autoResize({ target: textarea });
-    }
-    function increase_the_size() {
-        const textarea = document.getElementById("myTextarea");
-        const currentFontSize = window.getComputedStyle(textarea).fontSize; // Получение текущего размера шрифта
-        const currentSize = parseFloat(currentFontSize); // Преобразование размера шрифта в число
-        const newSize = currentSize + 2; // Увеличение размера шрифта на 2 пункта (можете выбрать любое увеличение)
-        textarea.style.fontSize = newSize + "px";
-        if (newSize < 0) {
-            document.getElementById('font_size').value = 0;
-        }
-        else {
-            document.getElementById('font_size').value = newSize;
-        }
-        textarea.style.overflow = 'hidden';
+    socket.onopen = (event) => {
+        console.log('WebSocket connection opened:', event);
+    };
 
-        autoResize({ target: textarea });
-    }
-    function countCharacters() {
-        const textarea = document.getElementById("myTextarea");
-        const characterCount = document.getElementById("characterCount");
-        const count = textarea.value.length;
-        characterCount.textContent = count;
-    }
+    socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        document.getElementById('myTextarea').value = data.message;
+    };
+
+    const textarea = document.getElementById('myTextarea');
+
+    textarea.addEventListener('input', () => {
+        const message = textarea.value;
+        socket.send(JSON.stringify({ message }));
+    });
+
+
 
     function submitForm() {
         // Получаем форму по её id
         var form = document.getElementById("myForm");
         form.submit();
     }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var textarea = document.getElementById('myTextarea');
-
-        textarea.addEventListener('input', function (event) {
-            countCharacters();
-            autoResize(event);
-        });
-    });
-
     function autoResize(event) {
 
         const textarea = event.target;
@@ -170,26 +140,15 @@ Chars: <span id="characterCount">0</span>
         event.preventDefault();
     }
     window.onload = function () {
-        countCharacters();
         const textarea = document.getElementById('myTextarea');
-        var fontSize = document.getElementById('font_size').value;  // Получаем размер шрифта из скрытого поля
-        document.getElementById('myTextarea').style.fontSize = fontSize + 'px';
         autoResize({ target: textarea });
     };
+    document.addEventListener('DOMContentLoaded', function () {
+        var textarea = document.getElementById('myTextarea');
 
-    const textarea = document.getElementById('myTextarea');
-    textarea.addEventListener('keydown', function (e) {
-        if (e.key === 'Tab') {
-            e.preventDefault();
-
-            const start = this.selectionStart;
-            const end = this.selectionEnd;
-
-            const value = this.value;
-            this.value = value.substring(0, start) + '\t' + value.substring(end);
-
-            this.selectionStart = this.selectionEnd = start + 1;
-        }
+        textarea.addEventListener('input', function (event) {
+            autoResize(event);
+        });
     });
 </script>
 {% endblock editor__content %}
