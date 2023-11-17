@@ -23,3 +23,12 @@
     border-radius: 6px;
 }
 
+.editor__content{
+    overflow: auto;
+    color: rgb(165, 184, 209);
+}
+
+.drawing-cursor {
+    cursor: crosshair;
+    /* Устанавливаем изображение карандаша как курсор */
+}

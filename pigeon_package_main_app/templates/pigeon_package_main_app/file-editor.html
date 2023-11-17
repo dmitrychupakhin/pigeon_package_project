@@ -94,6 +94,16 @@ Files
         save_as
     </span>
 </button>
+<button id="moveButton">
+    <span class="material-symbols-outlined zoom">
+        open_with
+    </span>
+</button>
+<button id="undoButton">
+    <span class="material-symbols-outlined zoom">
+        reply
+    </span>
+</button>
 <label for="xInput">X:</label>
 <input type="number" id="xInput" value="0">
 
@@ -152,21 +162,6 @@ Files
     socket.onclose = function (event) {
         console.log('WebSocket connection closed:', event);
     };
-
-    //Отрисовка изорбражения и текста
-
-    {% for picture_object in picture_objects %}
-    var img = new Image();
-    img.src = "{{ picture_object.picture.url }}";
-    img.onload = function () {
-        context.drawImage(img, {{ picture_object.x_position }}, {{ picture_object.y_position }});
-            };
-    {% endfor %}
-
-    {% for text_object in text_objects %}
-    ctx.fillText("{{ text_object.content }}", {{ text_object.x_position }}, {{ text_object.y_position }});
-    {% endfor %}
-
     //Сохранение изображения
 
     document.getElementById('saveButton').addEventListener('click', function () {
@@ -181,20 +176,138 @@ Files
             x_position: xPosition,
             y_position: yPosition
         };
-
+        drawingStack = [];
         socket.send(JSON.stringify(data));
     });
+    //Загрузка страницы
+    document.addEventListener("DOMContentLoaded", function () {
+        // Вызываем функцию с идентификатором холста и размером клетки
+        drawGrid("myCanvas", 20);
+        //Отрисовка изорбражения и текста
+        "{% for picture_object in picture_objects %}"
+        var img = new Image();
+        img.src = "{{ picture_object.picture.url }}";
+        img.onload = function () {
+            context.drawImage(img, "{{ picture_object.x_position }}", "{{ picture_object.y_position }}");
+        };
+        "{% endfor %}"
+
+        "{% for text_object in text_objects %}"
+        ctx.fillText("{{ text_object.content }}, {{ text_object.x_position }}, {{ text_object.y_position }}");
+        "{% endfor %}"
+    });
+
+    //Тетрадь
+
+
+    function drawGrid(canvasId, cellSize) {
+        var canvas = document.getElementById(canvasId);
+        var context = canvas.getContext("2d");
+        context.strokeStyle = "rgb(165, 184, 209)";
+
+        // Ширина и высота холста
+        var canvasWidth = canvas.width;
+        var canvasHeight = canvas.height;
+
+        // Отрисовка клетчатой тетради
+        for (var x = 0; x < canvasWidth; x += cellSize) {
+            context.moveTo(x, 0);
+            context.lineTo(x, canvasHeight);
+            context.stroke();
+        }
+
+        for (var y = 0; y < canvasHeight; y += cellSize) {
+            context.moveTo(0, y);
+            context.lineTo(canvasWidth, y);
+            context.stroke();
+        }
+    }
+
+    //Движение canvas
+    var moveButtonActivate = false;
+    var isMouseDown = false;
+    var startX, startY, scrollLeft, scrollTop;
+    var container = document.querySelector('.editor__content');
+    var content = document.querySelector('.myCanvas');
+
+    document.getElementById('moveButton').addEventListener('click', function () {
+        moveButtonActivate = !moveButtonActivate;
+
+        if (moveButtonActivate) {
+            document.getElementById('moveButton').classList.add('active_button');
+            container.style.cursor = "grab";
+            container.addEventListener("mousedown", startMove);
+            container.addEventListener("mousemove", move);
+            container.addEventListener("mouseup", stopMove);
+            container.addEventListener("mouseout", stopMove);
+        } else {
+            document.getElementById('moveButton').classList.remove('active_button');
+            container.style.cursor = "auto";
+            // Если заканчивается рисование, удаляем обработчики событий мыши и касания
+            container.removeEventListener("mousedown", startMove);
+            container.removeEventListener("mousemove", move);
+            container.removeEventListener("mouseup", stopMove);
+            container.addEventListener("mouseout", stopMove);
+        }
+    });
+
+    function startMove(e) {
+        container.style.cursor = "grabbing";
+        isMouseDown = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        scrollLeft = container.scrollLeft;
+        scrollTop = container.scrollTop;
+    }
+
+    function move(e) {
+        if (isMouseDown) {
+            // Вычисляем новые значения положения блока контента
+            var newScrollLeft = scrollLeft - (e.clientX - startX);
+            var newScrollTop = scrollTop - (e.clientY - startY);
+
+            // Присваиваем новые значения
+            container.scrollLeft = newScrollLeft;
+            container.scrollTop = newScrollTop;
+        }
+    }
+
+    function stopMove() {
+        container.style.cursor = "grab";
+        isMouseDown = false;
+    }
 
     //Рисование 
+    function undoLastDrawing() {
+        if (drawingStack.length > 1) {
+            drawingStack.pop(); // Удаляем последний рисунок
+            var img = new Image();
+            img.onload = function () {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+            img.src = drawingStack[drawingStack.length - 1]; // Загружаем предыдущий рисунок
+        }
+    }
+
+    // Пример использования функции отмены последнего действия
+    document.getElementById('undoButton').addEventListener('click', function () {
+        undoLastDrawing();
+    });
+
     var isDrawing = false;
     var drawButtonActivate = false;
-    context.lineWidth = 2;
-    context.strokeStyle = "rgb(89, 130, 184)";
+    var drawingStack = []; // массив для хранения рисунков
 
     document.getElementById('drawButton').addEventListener('click', function () {
-
+        context.lineWidth = 2;
+        context.strokeStyle = "rgb(89, 130, 184)";
         drawButtonActivate = !drawButtonActivate;
+
         if (drawButtonActivate) {
+            saveDrawing();
+            document.getElementById('drawButton').classList.add('active_button');
+            canvas.classList.add('drawing-cursor');
             canvas.addEventListener("mousedown", startDrawing);
             canvas.addEventListener("touchstart", startDrawingTouch, { passive: false });
             canvas.addEventListener("mousemove", draw);
@@ -203,7 +316,8 @@ Files
             canvas.addEventListener("touchend", stopDrawingTouch);
             canvas.addEventListener("mouseout", stopDrawing);
         } else {
-            // Если заканчивается рисование, удаляем обработчики событий мыши и касания
+            document.getElementById('drawButton').classList.remove('active_button');
+            canvas.classList.remove('drawing-cursor');
             canvas.removeEventListener("mousedown", startDrawing);
             canvas.removeEventListener("touchstart", startDrawingTouch);
             canvas.removeEventListener("mousemove", draw);
@@ -224,6 +338,8 @@ Files
         if (isDrawing) {
             context.lineTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
             context.stroke();
+            // Сохраняем текущий рисунок в стеке при каждом изменении
+            saveDrawing();
         }
     }
 
@@ -245,11 +361,17 @@ Files
             var touch = e.touches[0];
             context.lineTo(touch.pageX - canvas.offsetLeft, touch.pageY - canvas.offsetTop);
             context.stroke();
+            saveDrawing();
         }
     }
 
     function stopDrawingTouch() {
         isDrawing = false;
+    }
+
+
+    function saveDrawing() {
+        drawingStack.push(canvas.toDataURL());
     }
     //Обноваление размера
 
