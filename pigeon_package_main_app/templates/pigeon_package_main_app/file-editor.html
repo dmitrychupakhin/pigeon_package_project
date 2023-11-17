@@ -331,12 +331,12 @@ Files
     function startDrawing(e) {
         isDrawing = true;
         context.beginPath();
-        context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+        context.moveTo(e.pageX - canvas.offsetLeft + container.scrollLeft, e.pageY - canvas.offsetTop);
     }
 
     function draw(e) {
         if (isDrawing) {
-            context.lineTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+            context.lineTo(e.pageX - canvas.offsetLeft + container.scrollLeft, e.pageY - canvas.offsetTop);
             context.stroke();
             // Сохраняем текущий рисунок в стеке при каждом изменении
             saveDrawing();
@@ -352,14 +352,14 @@ Files
         isDrawing = true;
         var touch = e.touches[0];
         context.beginPath();
-        context.moveTo(touch.pageX - canvas.offsetLeft, touch.pageY - canvas.offsetTop);
+        context.moveTo(touch.pageX - canvas.offsetLeft + container.scrollLeft, touch.pageY - canvas.offsetTop);
     }
 
     function drawTouch(e) {
         e.preventDefault();
         if (isDrawing) {
             var touch = e.touches[0];
-            context.lineTo(touch.pageX - canvas.offsetLeft, touch.pageY - canvas.offsetTop);
+            context.lineTo(touch.pageX - canvas.offsetLeft + container.scrollLeft, touch.pageY - canvas.offsetTop);
             context.stroke();
             saveDrawing();
         }
