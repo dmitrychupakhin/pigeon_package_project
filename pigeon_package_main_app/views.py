@@ -1,28 +1,26 @@
 from django.conf import settings
 from django.shortcuts import redirect, render
 from .forms import *
-from .models import Package, TextFile, PackageInvitation
+from .models import Package, File, PackageInvitation
 from django.contrib.auth.decorators import login_required
 
 @login_required
 def file_editor(request, id):
-    file = TextFile.objects.get(id=id)
-    package = file.package
-    files = TextFile.objects.filter(package=package)
-    form = FileEditForm(instance=file)
+    file_object = File.objects.get(id=id)
+    package = file_object.package
+    files = File.objects.filter(package=package)
+    
+    picture_objects = file_object.picture_objects.all()
+    text_objects = file_object.text_objects.all()
+
     context = {
-        'form': form,
         'package': package,
         'files': files,
-        'file': file,
+        'file': file_object,
+        'picture_objects': picture_objects,
+        'text_objects': text_objects,
         'MEDIA_URL': settings.MEDIA_URL
     }   
-         
-    if request.method == 'POST':
-        form = FileEditForm(request.POST, instance=file)
-        if form.is_valid():
-            form.save()
-            context['form'] = form
     
     return render(request=request, template_name='pigeon_package_main_app/file-editor.html', context=context)
 
@@ -30,7 +28,7 @@ def file_editor(request, id):
 def package_editor(request, id):
     user = request.user
     package = Package.objects.get(id=id)
-    files = TextFile.objects.filter(package=id)
+    files = File.objects.filter(package=id)
     
     context = {}
     
@@ -131,7 +129,7 @@ def remove_package(request):
 def new_file(request, id):
     user = request.user
     package = Package.objects.get(id=id)
-    files = TextFile.objects.filter(package=id)
+    files = File.objects.filter(package=id)
     
     context = {}
     
@@ -158,7 +156,7 @@ def remove_file(request, id):
     
     user = request.user
     package = Package.objects.get(id=id)
-    files = TextFile.objects.filter(package=id)
+    files = File.objects.filter(package=id)
     
     context = {}
     
@@ -211,7 +209,7 @@ def outgoing_invitations(request):
 def new_invitation(request, id):
     user = request.user
     package = Package.objects.get(id=id)
-    files = TextFile.objects.filter(package=id)
+    files = File.objects.filter(package=id)
     context = {}
     context['package'] = package
     context['files'] = files

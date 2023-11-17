@@ -2,12 +2,6 @@ from django import forms
 from .models import *
 from django.core.exceptions import ValidationError
 
-class FileEditForm(forms.ModelForm):
-    content = forms.CharField(widget=forms.Textarea(attrs={'class': 'myTextarea editor__text-area', 'id': 'myTextarea'}), required=False, strip=False)
-    
-    class Meta:
-        model = TextFile
-        fields = ('content',)
 
 class NewPackageForm(forms.ModelForm):
     class Meta:
@@ -51,16 +45,16 @@ class RemovePackageForm(forms.Form):
             self.fields['packages'].queryset = Package.objects.filter(users=user)
 
 class RemoveFileForm(forms.Form):
-    files = forms.ModelMultipleChoiceField(queryset=TextFile.objects.all(), widget=forms.CheckboxSelectMultiple)
+    files = forms.ModelMultipleChoiceField(queryset=File.objects.all(), widget=forms.CheckboxSelectMultiple)
     def __init__(self, *args, **kwargs):
         package = kwargs.pop('package', None)  # Извлечение пользователя из kwargs
         super(RemoveFileForm, self).__init__(*args, **kwargs)
         if package:
-            self.fields['files'].queryset = TextFile.objects.filter(package=package)
+            self.fields['files'].queryset = File.objects.filter(package=package)
             
 class NewFileForm(forms.ModelForm):
     class Meta:
-        model = TextFile
+        model = File
         fields = ('name',)
     def save(self, package=None, commit=True):
         instance = super(NewFileForm, self).save(commit=False)

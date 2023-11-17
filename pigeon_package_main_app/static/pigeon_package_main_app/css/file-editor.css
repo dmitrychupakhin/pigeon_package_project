@@ -17,3 +17,9 @@
     border-right: 1px dashed #dedede;
     margin: 10px;
 }
+
+.myCanvas {
+    border: 1px solid #dedede;
+    border-radius: 6px;
+}
+

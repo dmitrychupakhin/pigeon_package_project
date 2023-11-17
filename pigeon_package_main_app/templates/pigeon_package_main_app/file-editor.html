@@ -75,7 +75,7 @@ Files
     </span>
 </button>
 <button onclick="increase_the_size()">
-    <span class="material-symbols-outlined zoom">
+    <span class="material-symbols-outlined button">
         zoom_in
     </span>
 </button>
@@ -84,7 +84,22 @@ Files
         zoom_out
     </span>
 </button>
-Chars: <span id="characterCount">0</span>
+<button id="drawButton">
+    <span class="material-symbols-outlined zoom">
+        ink_pen
+    </span>
+</button>
+<button id="saveButton">
+    <span class="material-symbols-outlined zoom">
+        save_as
+    </span>
+</button>
+<label for="xInput">X:</label>
+<input type="number" id="xInput" value="0">
+
+<label for="yInput">Y:</label>
+<input type="number" id="yInput" value="0">
+<button onclick="updateCanvas()">Update Canvas</button>
 {% endblock editor__buttons_left %}
 
 {% block editor__buttons_right %}
@@ -92,16 +107,18 @@ Chars: <span id="characterCount">0</span>
 <a href="#"><span class="material-symbols-outlined delete">
         delete_forever
     </span></a>
+
 {% endblock editor__buttons_right %}
 
 {% block editor__content %}
+<canvas class="myCanvas" id="myCanvas" width="{{ file.width }}" height="{{ file.height }}"></canvas>
 
-<form id="myForm" class="editor__text" action="{% url 'file-editor-page' file.id %}" method="POST">
-    {% csrf_token %}
-    {{ form.content }}
-</form>
 
 <script>
+    var canvas = document.getElementById("myCanvas");
+    var context = canvas.getContext("2d");
+    var animationFrameId;
+
     const socket = new WebSocket(`ws://${window.location.host}/ws/file/{{ file.id }}/`);
 
     socket.onopen = (event) => {
@@ -109,48 +126,166 @@ Chars: <span id="characterCount">0</span>
     };
 
     socket.onmessage = (event) => {
-        console.log("123")
-        const data = JSON.parse(event.data);
-        document.getElementById('myTextarea').value = data.message;
+        try {
+            console.log('Received data:', event.data);
+
+            var data = JSON.parse(event.data);
+            var x_position = data.x_position;
+            var y_position = data.y_position;
+            var picture_url = data.picture_url;
+
+            var img = new Image();
+
+            if (picture_url) {
+                img.src = picture_url;
+                img.onload = function () {
+                    context.drawImage(img, x_position, y_position);
+                };
+            } else {
+                console.error('URL изображения не определен.');
+            }
+        } catch (error) {
+            console.error('Ошибка при парсинге JSON:', error);
+        }
+    }
+
+    socket.onclose = function (event) {
+        console.log('WebSocket connection closed:', event);
     };
 
-    const textarea = document.getElementById('myTextarea');
+    //Отрисовка изорбражения и текста
 
-    textarea.addEventListener('input', () => {
-        const message = textarea.value;
-        socket.send(JSON.stringify({ message }));
+    {% for picture_object in picture_objects %}
+    var img = new Image();
+    img.src = "{{ picture_object.picture.url }}";
+    img.onload = function () {
+        context.drawImage(img, {{ picture_object.x_position }}, {{ picture_object.y_position }});
+            };
+    {% endfor %}
+
+    {% for text_object in text_objects %}
+    ctx.fillText("{{ text_object.content }}", {{ text_object.x_position }}, {{ text_object.y_position }});
+    {% endfor %}
+
+    //Сохранение изображения
+
+    document.getElementById('saveButton').addEventListener('click', function () {
+        var canvas = document.getElementById('myCanvas');
+        var imageData = canvas.toDataURL('image/png');
+
+        var xPosition = 0; // Ваш x_position
+        var yPosition = 0; // Ваш y_position
+
+        var data = {
+            image: imageData,
+            x_position: xPosition,
+            y_position: yPosition
+        };
+
+        socket.send(JSON.stringify(data));
     });
 
+    //Рисование 
+    var isDrawing = false;
+    var drawButtonActivate = false;
+    context.lineWidth = 2;
+    context.strokeStyle = "rgb(89, 130, 184)";
 
+    document.getElementById('drawButton').addEventListener('click', function () {
 
-    function submitForm() {
-        // Получаем форму по её id
-        var form = document.getElementById("myForm");
-        form.submit();
-    }
-    function autoResize(event) {
-
-        const textarea = event.target;
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-
-        textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight + "px";
-
-        window.scrollTo(scrollLeft, scrollTop);
-        event.preventDefault();
-    }
-    window.onload = function () {
-        const textarea = document.getElementById('myTextarea');
-        autoResize({ target: textarea });
-    };
-    document.addEventListener('DOMContentLoaded', function () {
-        var textarea = document.getElementById('myTextarea');
-
-        textarea.addEventListener('input', function (event) {
-            autoResize(event);
-        });
+        drawButtonActivate = !drawButtonActivate;
+        if (drawButtonActivate) {
+            canvas.addEventListener("mousedown", startDrawing);
+            canvas.addEventListener("touchstart", startDrawingTouch, { passive: false });
+            canvas.addEventListener("mousemove", draw);
+            canvas.addEventListener("touchmove", drawTouch, { passive: false });
+            canvas.addEventListener("mouseup", stopDrawing);
+            canvas.addEventListener("touchend", stopDrawingTouch);
+            canvas.addEventListener("mouseout", stopDrawing);
+        } else {
+            // Если заканчивается рисование, удаляем обработчики событий мыши и касания
+            canvas.removeEventListener("mousedown", startDrawing);
+            canvas.removeEventListener("touchstart", startDrawingTouch);
+            canvas.removeEventListener("mousemove", draw);
+            canvas.removeEventListener("touchmove", drawTouch);
+            canvas.removeEventListener("mouseup", stopDrawing);
+            canvas.removeEventListener("touchend", stopDrawingTouch);
+            canvas.removeEventListener("mouseout", stopDrawing);
+        }
     });
+
+    function startDrawing(e) {
+        isDrawing = true;
+        context.beginPath();
+        context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+    }
+
+    function draw(e) {
+        if (isDrawing) {
+            context.lineTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+            context.stroke();
+        }
+    }
+
+    function stopDrawing() {
+        isDrawing = false;
+    }
+
+    function startDrawingTouch(e) {
+        e.preventDefault();
+        isDrawing = true;
+        var touch = e.touches[0];
+        context.beginPath();
+        context.moveTo(touch.pageX - canvas.offsetLeft, touch.pageY - canvas.offsetTop);
+    }
+
+    function drawTouch(e) {
+        e.preventDefault();
+        if (isDrawing) {
+            var touch = e.touches[0];
+            context.lineTo(touch.pageX - canvas.offsetLeft, touch.pageY - canvas.offsetTop);
+            context.stroke();
+        }
+    }
+
+    function stopDrawingTouch() {
+        isDrawing = false;
+    }
+    //Обноваление размера
+
+    function updateCanvas() {
+        var newX = parseInt(document.getElementById("xInput").value);
+        var newY = parseInt(document.getElementById("yInput").value);
+
+        animateResize(newX, newY);
+    }
+
+    //Анимация resize
+
+    function animateResize(newWidth, newHeight) {
+        var startWidth = canvas.width;
+        var startHeight = canvas.height;
+        var startTime;
+
+        function animate(currentTime) {
+            if (!startTime) startTime = currentTime;
+            var progress = (currentTime - startTime) / 2000; // Duration: 500ms
+
+            if (progress < 1) {
+                canvas.width = startWidth + (newWidth - startWidth) * progress;
+                canvas.height = startHeight + (newHeight - startHeight) * progress;
+                animationFrameId = requestAnimationFrame(animate);
+            } else {
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+            }
+        }
+
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+        animationFrameId = requestAnimationFrame(animate);
+    }
 </script>
 {% endblock editor__content %}
 
@@ -159,5 +294,5 @@ Chars: <span id="characterCount">0</span>
 {% endblock additional-block__title %}
 
 {% block additional-block__content %}
-<div style="font-style: italic;" class="error-message">В разработке</div>
+<div id="error-message" style="font-style: italic;" class="error-message">В разработке</div>
 {% endblock additional-block__content %}
