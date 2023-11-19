@@ -13,7 +13,8 @@ def file_editor(request, id):
     layers = file_object.get_layers()
     for l in layers:
         if l.picture:
-            print('123')
+            print(l.order)
+            
     context = {
         'package': package,
         'files': files,

@@ -109,6 +109,8 @@ Files
         reply
     </span>
 </button>
+<button id="colorPickerBtn">Выбрать цвет</button>
+<input type="color" id="colorInput" onchange="setColor()">
 <label for="xInput">X:</label>
 <input type="number" id="xInput" value="0">
 
@@ -127,10 +129,8 @@ Files
 
 {% block editor__content %}
 
-<canvas class="myCanvas" id="myCanvas" style="border: 3px solid black;" width="{{ file.width }}"
-    height="{{ file.height }}"></canvas>
-<canvas class="myCanvas" id="current_layer_canvas" style="border: 3px dashed red;" width="{{ file.width }}"
-    height="{{ file.height }}"></canvas>
+<canvas class="myCanvas" id="myCanvas" width="{{ file.width }}" height="{{ file.height }}"></canvas>
+<canvas class="myCanvas" id="current_layer_canvas" width="{{ file.width }}" height="{{ file.height }}"></canvas>
 
 <script>
     var canvas = document.getElementById("myCanvas");
@@ -186,6 +186,7 @@ Files
             y_position: yPosition
         };
         drawingStack = [];
+        current_layer_context.clearRect(0, 0, current_layer_canvas.width, current_layer_canvas.height);
         socket.send(JSON.stringify(data));
     });
     //Загрузка страницы
@@ -196,21 +197,28 @@ Files
         // Вызываем функцию с идентификатором холста и размером клетки
         drawGrid("myCanvas", 20);
         //Отрисовка изорбражения и текста
+        var imagePromises = [];
+
         {% for l in layers %}
         {% if l.picture %}
         (function () {
             var img = new Image();
             img.src = "{{ l.picture.url }}";
-            img.onload = function () {
-                context.drawImage(img, "{{ l.x_position }}", "{{ l.y_position }}");
-            };
-        })();
-        {% else %}
-        {% if l.content %}
-        context.fillText("{{ l.content }}", {{ l.x_position }}, {{ l.y_position }});
-    {% endif %}
+
+            // Создаем Promise для каждого изображения
+            var imagePromise = new Promise(function (resolve) {
+                img.onload = function () {
+                    context.drawImage(img, "{{ l.x_position }}", "{{ l.y_position }}");
+                    console.log({{ l.order }});
+            resolve();
+        };
+    });
+
+    imagePromises.push(imagePromise);
+        }) ();
     {% endif %}
     {% endfor %}
+
     });
 
     //Тетрадь
@@ -294,6 +302,15 @@ Files
     }
 
     //Рисование 
+    //Изменение цвета ручки
+
+    function setColor() {
+        const selectedColor = colorInput.value;
+        current_layer_context.strokeStyle = selectedColor;
+        // Дополнительные действия при выборе цвета, если необходимо
+    }
+
+
     function undoLastDrawing() {
         if (drawingStack.length > 1) {
             drawingStack.pop(); // Удаляем последний рисунок
