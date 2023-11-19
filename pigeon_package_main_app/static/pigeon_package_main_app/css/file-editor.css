@@ -21,11 +21,13 @@
 .myCanvas {
     border: 1px solid #dedede;
     border-radius: 6px;
+    position: absolute;
+    padding: 10px;
 }
 
 .editor__content{
+    position: relative;
     overflow: auto;
-    color: rgb(165, 184, 209);
 }
 
 .drawing-cursor {

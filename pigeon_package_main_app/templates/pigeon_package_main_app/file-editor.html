@@ -31,7 +31,12 @@ Files
     {% endif %}
 </li>
 {% endfor %}
-
+<div class="block-title">
+    Слои
+</div>
+{% for l in layers %}
+<div class="list__content-item">{{ l.name }}</div>
+{% endfor %}
 {% endblock list__content %}
 
 {% block list__buttons %}
@@ -121,12 +126,17 @@ Files
 {% endblock editor__buttons_right %}
 
 {% block editor__content %}
-<canvas class="myCanvas" id="myCanvas" width="{{ file.width }}" height="{{ file.height }}"></canvas>
 
+<canvas class="myCanvas" id="myCanvas" style="border: 3px solid black;" width="{{ file.width }}"
+    height="{{ file.height }}"></canvas>
+<canvas class="myCanvas" id="current_layer_canvas" style="border: 3px dashed red;" width="{{ file.width }}"
+    height="{{ file.height }}"></canvas>
 
 <script>
     var canvas = document.getElementById("myCanvas");
+    var current_layer_canvas = document.getElementById('current_layer_canvas');
     var context = canvas.getContext("2d");
+    var current_layer_context = current_layer_canvas.getContext("2d");
     var animationFrameId;
 
     const socket = new WebSocket(`ws://${window.location.host}/ws/file/{{ file.id }}/`);
@@ -165,8 +175,7 @@ Files
     //Сохранение изображения
 
     document.getElementById('saveButton').addEventListener('click', function () {
-        var canvas = document.getElementById('myCanvas');
-        var imageData = canvas.toDataURL('image/png');
+        var imageData = current_layer_canvas.toDataURL('image/png');
 
         var xPosition = 0; // Ваш x_position
         var yPosition = 0; // Ваш y_position
@@ -181,20 +190,27 @@ Files
     });
     //Загрузка страницы
     document.addEventListener("DOMContentLoaded", function () {
+        var height = parseInt("{{ file.height }}", 10) + 50;
+        document.querySelector('.editor__content').style.height = height + "px";
+
         // Вызываем функцию с идентификатором холста и размером клетки
         drawGrid("myCanvas", 20);
         //Отрисовка изорбражения и текста
-        "{% for picture_object in picture_objects %}"
-        var img = new Image();
-        img.src = "{{ picture_object.picture.url }}";
-        img.onload = function () {
-            context.drawImage(img, "{{ picture_object.x_position }}", "{{ picture_object.y_position }}");
-        };
-        "{% endfor %}"
-
-        "{% for text_object in text_objects %}"
-        ctx.fillText("{{ text_object.content }}, {{ text_object.x_position }}, {{ text_object.y_position }}");
-        "{% endfor %}"
+        {% for l in layers %}
+        {% if l.picture %}
+        (function () {
+            var img = new Image();
+            img.src = "{{ l.picture.url }}";
+            img.onload = function () {
+                context.drawImage(img, "{{ l.x_position }}", "{{ l.y_position }}");
+            };
+        })();
+        {% else %}
+        {% if l.content %}
+        context.fillText("{{ l.content }}", {{ l.x_position }}, {{ l.y_position }});
+    {% endif %}
+    {% endif %}
+    {% endfor %}
     });
 
     //Тетрадь
@@ -300,44 +316,47 @@ Files
     var drawingStack = []; // массив для хранения рисунков
 
     document.getElementById('drawButton').addEventListener('click', function () {
-        context.lineWidth = 2;
-        context.strokeStyle = "rgb(89, 130, 184)";
+        current_layer_context.lineWidth = 2;
+        current_layer_context.strokeStyle = "rgb(89, 130, 184)";
         drawButtonActivate = !drawButtonActivate;
-
         if (drawButtonActivate) {
             saveDrawing();
             document.getElementById('drawButton').classList.add('active_button');
-            canvas.classList.add('drawing-cursor');
-            canvas.addEventListener("mousedown", startDrawing);
-            canvas.addEventListener("touchstart", startDrawingTouch, { passive: false });
-            canvas.addEventListener("mousemove", draw);
-            canvas.addEventListener("touchmove", drawTouch, { passive: false });
-            canvas.addEventListener("mouseup", stopDrawing);
-            canvas.addEventListener("touchend", stopDrawingTouch);
-            canvas.addEventListener("mouseout", stopDrawing);
+            current_layer_canvas.classList.add('drawing-cursor');
+            current_layer_canvas.addEventListener("mousedown", startDrawing);
+            current_layer_canvas.addEventListener("touchstart", startDrawingTouch, { passive: false });
+            current_layer_canvas.addEventListener("mousemove", draw);
+            current_layer_canvas.addEventListener("touchmove", drawTouch, { passive: false });
+            current_layer_canvas.addEventListener("mouseup", stopDrawing);
+            current_layer_canvas.addEventListener("touchend", stopDrawingTouch);
+            current_layer_canvas.addEventListener("mouseout", stopDrawing);
         } else {
             document.getElementById('drawButton').classList.remove('active_button');
-            canvas.classList.remove('drawing-cursor');
-            canvas.removeEventListener("mousedown", startDrawing);
-            canvas.removeEventListener("touchstart", startDrawingTouch);
-            canvas.removeEventListener("mousemove", draw);
-            canvas.removeEventListener("touchmove", drawTouch);
-            canvas.removeEventListener("mouseup", stopDrawing);
-            canvas.removeEventListener("touchend", stopDrawingTouch);
-            canvas.removeEventListener("mouseout", stopDrawing);
+            current_layer_canvas.classList.remove('drawing-cursor');
+            current_layer_canvas.removeEventListener("mousedown", startDrawing);
+            current_layer_canvas.removeEventListener("touchstart", startDrawingTouch);
+            current_layer_canvas.removeEventListener("mousemove", draw);
+            current_layer_canvas.removeEventListener("touchmove", drawTouch);
+            current_layer_canvas.removeEventListener("mouseup", stopDrawing);
+            current_layer_canvas.removeEventListener("touchend", stopDrawingTouch);
+            current_layer_canvas.removeEventListener("mouseout", stopDrawing);
         }
     });
 
     function startDrawing(e) {
         isDrawing = true;
-        context.beginPath();
-        context.moveTo(e.pageX - canvas.offsetLeft + container.scrollLeft, e.pageY - canvas.offsetTop);
+        current_layer_context.beginPath();
+        var rect = canvas.getBoundingClientRect();
+        current_layer_context.moveTo(e.clientX - rect.left - 10, e.clientY - rect.top - 10);
     }
 
     function draw(e) {
         if (isDrawing) {
-            context.lineTo(e.pageX - canvas.offsetLeft + container.scrollLeft, e.pageY - canvas.offsetTop);
-            context.stroke();
+            console.log(e.pageX - canvas.offsetLeft + container.scrollLeft);
+            console.log(e.pageY - canvas.offsetTop);
+            var rect = canvas.getBoundingClientRect();
+            current_layer_context.lineTo(e.clientX - rect.left - 10, e.clientY - rect.top - 10);
+            current_layer_context.stroke();
             // Сохраняем текущий рисунок в стеке при каждом изменении
             saveDrawing();
         }
@@ -351,16 +370,18 @@ Files
         e.preventDefault();
         isDrawing = true;
         var touch = e.touches[0];
-        context.beginPath();
-        context.moveTo(touch.pageX - canvas.offsetLeft + container.scrollLeft, touch.pageY - canvas.offsetTop);
+        current_layer_context.beginPath();
+        var rect = canvas.getBoundingClientRect();
+        current_layer_context.moveTo(e.clientX - rect.left - 10, e.clientY - rect.top - 10);
     }
 
     function drawTouch(e) {
         e.preventDefault();
         if (isDrawing) {
             var touch = e.touches[0];
-            context.lineTo(touch.pageX - canvas.offsetLeft + container.scrollLeft, touch.pageY - canvas.offsetTop);
-            context.stroke();
+            var rect = canvas.getBoundingClientRect();
+            current_layer_context.lineTo(e.clientX - rect.left - 10, e.clientY - rect.top - 10);
+            current_layer_context.stroke();
             saveDrawing();
         }
     }
@@ -371,7 +392,7 @@ Files
 
 
     function saveDrawing() {
-        drawingStack.push(canvas.toDataURL());
+        drawingStack.push(current_layer_canvas.toDataURL());
     }
     //Обноваление размера
 

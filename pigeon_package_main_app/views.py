@@ -10,15 +10,15 @@ def file_editor(request, id):
     package = file_object.package
     files = File.objects.filter(package=package)
     
-    picture_objects = file_object.picture_objects.all()
-    text_objects = file_object.text_objects.all()
-
+    layers = file_object.get_layers()
+    for l in layers:
+        if l.picture:
+            print('123')
     context = {
         'package': package,
         'files': files,
         'file': file_object,
-        'picture_objects': picture_objects,
-        'text_objects': text_objects,
+        'layers': layers,
         'MEDIA_URL': settings.MEDIA_URL
     }   
     

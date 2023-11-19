@@ -45,7 +45,10 @@ class ChatConsumer(WebsocketConsumer):
         
         picture_object.save()
         
-        File.objects.get(id=self.file_id).picture_objects.add(picture_object)
+        order = File.objects.get(id=self.file_id).picture_objects.count() + File.objects.get(id=self.file_id).picture_objects.count()
+        
+        File.objects.get(id=self.file_id).add_picture_object(object=picture_object, order=order)
+        
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
