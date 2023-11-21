@@ -80,7 +80,7 @@ class File(models.Model):
     
     def add_picture_object(self, object, order):
         object.order = order
-        
+        object.save()
         all_objects = self.get_layers()
         
         insertion_index = 0
@@ -90,13 +90,14 @@ class File(models.Model):
             else:
                 break
         
-        for obj in all_objects[:insertion_index]:
+        for obj in all_objects[insertion_index:]:
             obj.order += 1
+        
+        self.picture_objects.add(object)
         
         for obj in all_objects:
             obj.save()  
         
-        self.picture_objects.add(object)
         self.save()
     
     def remove_text_object(self, text_object):

@@ -11,9 +11,9 @@ def file_editor(request, id):
     files = File.objects.filter(package=package)
     
     layers = file_object.get_layers()
+    
     for l in layers:
-        if l.picture:
-            print(l.order)
+        print(l.order)
             
     context = {
         'package': package,

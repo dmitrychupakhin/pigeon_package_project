@@ -14,28 +14,17 @@
 {% endblock additional_logo_text %}
 
 {% block list__title %}
-Files
+Layers
 {% endblock list__title %}
 
 {% block list__content %}
-{% for f in files %}
-<li>
-    {% if f == file %}
-    <a href="{% url 'file-editor-page' f.id %}" class="list__content-item list__content-item_active">
-        {{ f.name }}
-    </a>
-    {% else %}
-    <a href="{% url 'file-editor-page' f.id %}" class="list__content-item">
-        {{ f.name }}
-    </a>
-    {% endif %}
-</li>
-{% endfor %}
-<div class="block-title">
-    Слои
-</div>
 {% for l in layers %}
-<div class="list__content-item">{{ l.name }}</div>
+<li>
+    <a class="list__content-item">
+        {{ l.name }}
+        <img src="{{ l.picture.url}}" alt="{{ l.name }} изображение" width="100" height="100">
+    </a>
+</li>
 {% endfor %}
 {% endblock list__content %}
 
@@ -147,7 +136,6 @@ Files
 
     socket.onmessage = (event) => {
         try {
-            console.log('Received data:', event.data);
 
             var data = JSON.parse(event.data);
             var x_position = data.x_position;
@@ -175,13 +163,46 @@ Files
     //Сохранение изображения
 
     document.getElementById('saveButton').addEventListener('click', function () {
-        var imageData = current_layer_canvas.toDataURL('image/png');
+        var imageData = current_layer_context.getImageData(0, 0, current_layer_canvas.width, current_layer_canvas.height).data;
 
-        var xPosition = 0; // Ваш x_position
-        var yPosition = 0; // Ваш y_position
+        var minX = current_layer_canvas.width;
+        var minY = current_layer_canvas.height;
+        var maxX = 0;
+        var maxY = 0;
+
+        for (var y = 0; y < current_layer_canvas.height; y++) {
+            for (var x = 0; x < current_layer_canvas.width; x++) {
+                var index = (y * current_layer_canvas.width + x) * 4;
+                var alpha = imageData[index + 3];
+
+                if (alpha > 0) {
+                    minX = Math.min(minX, x);
+                    minY = Math.min(minY, y);
+                    maxX = Math.max(maxX, x);
+                    maxY = Math.max(maxY, y);
+                }
+            }
+        }
+
+        var regionX = minX;
+        var regionY = minY;
+        var regionWidth = maxX - minX + 1;
+        var regionHeight = maxY - minY + 1;
+
+        var tempCanvas = document.createElement('canvas');
+        var tempContext = tempCanvas.getContext('2d');
+        tempCanvas.width = regionWidth;
+        tempCanvas.height = regionHeight;
+
+        tempContext.drawImage(current_layer_canvas, regionX, regionY, regionWidth, regionHeight, 0, 0, regionWidth, regionHeight);
+
+        var imageURL = tempCanvas.toDataURL('image/png');
+
+        var xPosition = regionX; // Ваш x_position
+        var yPosition = regionY; // Ваш y_position
 
         var data = {
-            image: imageData,
+            image: imageURL,
             x_position: xPosition,
             y_position: yPosition
         };
@@ -197,27 +218,46 @@ Files
         // Вызываем функцию с идентификатором холста и размером клетки
         drawGrid("myCanvas", 20);
         //Отрисовка изорбражения и текста
-        var imagePromises = [];
+        var urls = [];
+        var x = [];
+        var y = [];
 
-        {% for l in layers %}
-        {% if l.picture %}
-        (function () {
-            var img = new Image();
-            img.src = "{{ l.picture.url }}";
+        "{% for l in layers %}"
+        urls.push("{{l.picture.url}}");
+        x.push("{{ l.x_position }}");
+        y.push("{{ l.y_position }}");
+        "{% endfor %}"
 
-            // Создаем Promise для каждого изображения
-            var imagePromise = new Promise(function (resolve) {
+
+        // Функция для загрузки изображения по URL
+        async function loadImage(url) {
+            return new Promise((resolve, reject) => {
+                var img = new Image();
                 img.onload = function () {
-                    context.drawImage(img, "{{ l.x_position }}", "{{ l.y_position }}");
-                    console.log({{ l.order }});
-            resolve();
-        };
-    });
+                    resolve(img);
+                };
+                img.onerror = function () {
+                    reject(new Error('Не удалось загрузить изображение: ' + url));
+                };
+                img.src = url;
+            });
+        }
 
-    imagePromises.push(imagePromise);
-        }) ();
-    {% endif %}
-    {% endfor %}
+        // Функция для отрисовки изображений в заданной последовательности
+        async function drawImagesSequentially() {
+            for (var i = 0; i < urls.length; i++) {
+                try {
+                    const img = await loadImage(urls[i]);
+                    context.drawImage(img, x[i], y[i], img.width, img.height);
+                    // Дополнительная логика или обработка после отрисовки каждого изображения
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+
+        // Вызываем функцию для отрисовки изображений
+        drawImagesSequentially();
 
     });
 
